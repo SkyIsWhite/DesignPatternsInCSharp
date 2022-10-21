@@ -1,0 +1,124 @@
+WEBVTT
+
+00:02.350 --> 00:07.870
+We're now going to take a look at the bridge design pattern and the bridge design pattern is simply
+
+00:07.870 --> 00:11.840
+the concept of connecting different components through abstractions.
+
+00:11.860 --> 00:16.900
+And remember, whatever we talk about abstraction, we typically talk about either and the interface
+
+00:16.900 --> 00:18.190
+or an abstract class.
+
+00:18.550 --> 00:19.760
+Just wanted to remind you.
+
+00:19.780 --> 00:27.670
+So the motivation for using the bridge is that it avoids well, one of the cases is it avoids the Cartesian
+
+00:27.670 --> 00:29.020
+product, complexity, dispersion.
+
+00:29.050 --> 00:30.370
+So what is that exactly?
+
+00:30.400 --> 00:31.040
+Well, let me show you.
+
+00:31.300 --> 00:35.650
+So, for example, let's suppose that you have some sort of base class like a thread Chinchilla, for
+
+00:35.650 --> 00:40.180
+example, and then you decide that your schedule can be preemptive or cooperative.
+
+00:40.360 --> 00:45.070
+But on the other hand, your scheduler can also run on Windows or Unix.
+
+00:45.220 --> 00:47.800
+So you end up with a two by two scenario.
+
+00:47.800 --> 00:53.070
+So you end up with the two different schedules times, the two different operating system.
+
+00:53.080 --> 00:55.020
+So you end up with four classes effectively.
+
+00:55.270 --> 01:00.880
+And this is what I'm calling the Cartesian product, because if you have let's say you have three criteria,
+
+01:00.880 --> 01:04.430
+then you would have eight different classes because it will be two by two by two.
+
+01:04.660 --> 01:08.500
+So it's this kind of product that we actually want to avoid.
+
+01:08.500 --> 01:10.210
+And the bridge pattern does exactly this.
+
+01:10.210 --> 01:14.300
+The bridge pattern tries to avoid this entire entity explosion.
+
+01:14.560 --> 01:20.280
+So if you have something like this, this is the illustration of the scenario I've just mentioned.
+
+01:20.500 --> 01:24.820
+So you have a three scheduler and then you have the preemptive corporative.
+
+01:24.820 --> 01:30.580
+And from that you inherit the windows, preemptive Unix, preemptive Unix corporative and Windows coöperative.
+
+01:30.700 --> 01:36.550
+And you can imagine that if you have more variety in this tree than the tree would become even more
+
+01:36.550 --> 01:37.050
+massive.
+
+01:37.270 --> 01:44.290
+So you want to avoid this because eventually you end up also supporting, let's say, the Android operating
+
+01:44.290 --> 01:49.870
+system and then you end up with six classes instead of four because you have to have one on the preemptive
+
+01:49.870 --> 01:52.320
+side and you have to have one on the corporative side.
+
+01:52.600 --> 01:54.580
+So what you do instead is slightly different.
+
+01:54.580 --> 02:00.840
+What you do is you leave the thread scheduler as a base class and you inherit from the preemptive threat
+
+02:00.850 --> 02:02.830
+scheduler and the cooperative threat schedule.
+
+02:03.130 --> 02:07.210
+But then, of course, instead of inheritance, you simply use aggregation.
+
+02:07.210 --> 02:13.570
+Say you give Henggeler a private field of some kind called platform scheduler, which is all of the
+
+02:13.570 --> 02:15.700
+interface type II platform scheduler.
+
+02:15.700 --> 02:18.510
+Or indeed you can use an abstract class if you prefer that.
+
+02:18.730 --> 02:22.120
+And from that you inherit Unix scheduler and Windows scheduler.
+
+02:22.130 --> 02:30.040
+So you can see that instead of using inheritance all the way and getting a sort of binary or a.e tree
+
+02:30.040 --> 02:34.660
+of inheritance as you grow in terms of variety, what you do is use aggregation instead.
+
+02:34.870 --> 02:38.060
+And that's what the breech pattern is ultimately all about.
+
+02:38.080 --> 02:43.510
+So the bridge is quite simply a mechanism which allows you to decouple an interface or indeed an interface
+
+02:43.510 --> 02:48.250
+hierarchy from an implementation or indeed an entire implementation hierarchy.

@@ -1,0 +1,661 @@
+WEBVTT
+
+00:02.860 --> 00:09.220
+Property observers in the framework are a very common thing, and the I probably change the interface
+
+00:09.220 --> 00:10.450
+is used quite a lot.
+
+00:10.780 --> 00:16.600
+However, there are situations where things get slightly more complicated and one of those situations
+
+00:16.600 --> 00:20.980
+is called a bidirectional binding or directional binding.
+
+00:21.010 --> 00:22.300
+So what is this all about?
+
+00:22.330 --> 00:25.930
+Well, let me show you a very simple scenario where this shows up.
+
+00:25.930 --> 00:27.900
+Let's imagine that you have a product.
+
+00:27.910 --> 00:31.720
+So you have a class for a product and that product has a name.
+
+00:31.720 --> 00:36.070
+So public string name or just do it like this.
+
+00:36.430 --> 00:44.340
+And then you have a window where information about this product is shown, public class window.
+
+00:45.250 --> 00:46.450
+So a window.
+
+00:46.450 --> 00:51.100
+And it has let's say it has a lot of different controls, like edit boxes, for example.
+
+00:51.100 --> 00:58.600
+And let's suppose that you have an edit box which is tied to a string which presents the product name
+
+01:00.370 --> 01:02.950
+deliberately making those named differently.
+
+01:02.950 --> 01:07.540
+So you have a product name, which is let's say it's an added box.
+
+01:07.540 --> 01:09.400
+In actual fact, it's an added control.
+
+01:09.410 --> 01:15.760
+So basically somebody can edit the product name, but you can also change the product name inside the
+
+01:15.760 --> 01:21.330
+class itself, maybe because somebody has updated the database and all of a sudden the name changes.
+
+01:21.760 --> 01:24.530
+So you have a kind of bidirectional dependency.
+
+01:24.550 --> 01:28.900
+You basically want this value and this value to be the same value always.
+
+01:29.140 --> 01:30.600
+And the question is, how do you do this?
+
+01:30.790 --> 01:31.830
+How do you implement this?
+
+01:31.840 --> 01:34.900
+Now, obviously, we already have the mechanism for property observers.
+
+01:34.900 --> 01:36.670
+That's I notify property change.
+
+01:36.970 --> 01:41.760
+So we may as well begin by implementing it in both product as well as window.
+
+01:42.670 --> 01:46.000
+So that's how I NPC here.
+
+01:46.660 --> 01:51.250
+I notify probably change, just generate the default implementation here.
+
+01:51.250 --> 01:57.160
+I'm going to clean this up a bit so it fits better and you would have a similar thing.
+
+01:57.250 --> 02:00.670
+Now let's not forget that you have to change the property itself.
+
+02:00.670 --> 02:02.620
+At the moment it's just an automatic property.
+
+02:02.620 --> 02:07.240
+We need to change it and use the change notification so it will become something like this.
+
+02:07.240 --> 02:12.370
+Luckily, if you're using rechargeable rider, then all of these problems are handled for you.
+
+02:12.620 --> 02:14.470
+We'll do the same thing for a window.
+
+02:14.480 --> 02:20.110
+So once again, I notify property change to just generate the default implementation here, which uses
+
+02:20.110 --> 02:22.780
+the call, remember, name trick, by the way.
+
+02:23.080 --> 02:29.250
+And let's change the product name property to use change notifications like so.
+
+02:29.500 --> 02:37.390
+OK, so now we have the set up and what we can do is we can try to get the two elements to subscribe
+
+02:37.390 --> 02:38.160
+to one another.
+
+02:38.320 --> 02:39.330
+Surprise, surprise.
+
+02:39.610 --> 02:42.810
+So what is the idea behind this implementation?
+
+02:42.820 --> 02:43.680
+The idea is the following.
+
+02:43.690 --> 02:47.710
+Let's suppose you make a product so you make a product.
+
+02:47.950 --> 02:51.160
+Let's suppose that its name is a book.
+
+02:51.610 --> 02:53.170
+I'm just going to write a book here.
+
+02:53.350 --> 02:56.830
+And let's suppose you have a window which presents information about this product.
+
+02:56.830 --> 02:58.700
+So a window is a new window.
+
+02:59.200 --> 03:07.060
+Let's actually make sure that we initialize the the product name with book as well.
+
+03:11.610 --> 03:16.740
+So at the moment, we can guarantee that the product name here and the name here have the same value,
+
+03:16.740 --> 03:18.270
+but how do we keep it this way?
+
+03:18.630 --> 03:24.270
+How do we ensure that they are always the same value and when one of them changes, the other changes
+
+03:24.270 --> 03:24.750
+in kind?
+
+03:25.050 --> 03:29.300
+Well, the simple approach would be to simply subscribe to both of these events.
+
+03:29.310 --> 03:31.140
+So first of all, we subscribe on the product.
+
+03:31.150 --> 03:36.600
+So we say product got property changed, property changed, and we make a subscription.
+
+03:36.600 --> 03:40.040
+So we make a proper subscription out of all of us.
+
+03:40.050 --> 03:48.960
+And here we say, well, if the argument is name, so if it then talks dot property name is in fact
+
+03:48.960 --> 03:53.460
+equal to name, then what we do is what we can output.
+
+03:53.460 --> 04:00.930
+Just some debugging information so that we get to see that name was changed in product and we can say
+
+04:00.930 --> 04:08.170
+window dot product name is equal to a product, not name, and you will do the same thing in reverse.
+
+04:08.190 --> 04:10.050
+So now you would subscribe to the window.
+
+04:10.050 --> 04:19.050
+So you would say window the property changed and you would once again perform this kind of subscription.
+
+04:19.060 --> 04:24.510
+So here once again, you expect Ventas property name to be a product name.
+
+04:26.310 --> 04:32.250
+And if that's the case, we can once again, S.W., that name is changed in window this time.
+
+04:32.820 --> 04:38.360
+And then you would set the product name, product name equals window dot product name.
+
+04:38.610 --> 04:43.550
+So we're attempting to synchronize to variables, to properties in actual fact.
+
+04:43.560 --> 04:49.530
+So when the product changes, we update the window, when the window changes and we update the product.
+
+04:49.770 --> 04:51.620
+So let's see if this actually works.
+
+04:51.630 --> 04:55.620
+Now, I'm going to add a couple of two string implementations as well.
+
+04:55.620 --> 05:03.780
+So I will go into product here and I will give it a two string implementation where well, let's just
+
+05:03.780 --> 05:12.630
+output the fact that we are in product and here is the name of the product and I'll do a similar thing
+
+05:13.320 --> 05:20.130
+for the window, except that in the window will specify that it's window and here it has to be product
+
+05:20.130 --> 05:20.320
+name.
+
+05:21.570 --> 05:24.960
+OK, so let's experiment with this.
+
+05:24.960 --> 05:27.690
+Let's take a product and set its name.
+
+05:28.140 --> 05:30.680
+So it's not going to be book, it's going to be a smart book.
+
+05:31.630 --> 05:37.230
+Look for really smart people and then we can S.W. both the product as well as the window.
+
+05:37.920 --> 05:39.090
+And let's actually run this.
+
+05:39.100 --> 05:40.050
+Let's see what we get.
+
+05:44.330 --> 05:50.510
+OK, you can see that name is changed in product, name is changed in window, and then the product
+
+05:50.510 --> 05:53.330
+is Smart book and the window also shows my book.
+
+05:53.330 --> 05:55.370
+So everything is working, everything is fine.
+
+05:55.670 --> 05:59.210
+But your you might be surprised that it's working because remember.
+
+06:00.830 --> 06:05.720
+Well, one of the questions you need to ask is why isn't this causing an infinite recursion scenario,
+
+06:05.720 --> 06:09.230
+because you change the product and you update the window.
+
+06:09.230 --> 06:14.870
+But when you call this, when you update the window, you change the window, which should update the
+
+06:14.870 --> 06:17.750
+product, which should get you back here, back here, back here.
+
+06:17.750 --> 06:19.730
+And you should get a stack overflow exception.
+
+06:20.210 --> 06:23.490
+So why doesn't a stack of ortho exception actually happen?
+
+06:23.510 --> 06:27.530
+The answer is in the change guards in these conditions.
+
+06:28.010 --> 06:32.920
+So you'll notice that we only generate the property changed event if the value has in fact changed.
+
+06:32.930 --> 06:35.960
+If the value is the same, then we simply return.
+
+06:35.960 --> 06:39.350
+And this is precisely the mechanism that prevents infinite recursion.
+
+06:39.360 --> 06:43.850
+So if you forgot to do this and we are lucky to have right to generate this for us, but if you forgot
+
+06:43.850 --> 06:48.830
+to do this, you would in fact get infinite recursion and they stack overflow exception, probably not
+
+06:48.830 --> 06:50.810
+something you want in your product.
+
+06:51.140 --> 06:54.350
+OK, so this is a set up that actually does work.
+
+06:54.350 --> 06:59.990
+We have synchronization between two properties, but what if you wanted to wrap this synchronization
+
+06:59.990 --> 07:01.290
+into a separate object?
+
+07:01.310 --> 07:07.070
+Well, if you want to have some sort of utility object for managing this kind of binding, now, we
+
+07:07.070 --> 07:10.750
+already have this functionality as part of, let's say, Windows forms.
+
+07:11.120 --> 07:12.740
+This is typically called binding.
+
+07:12.740 --> 07:18.350
+And the idea is that you bind one variable to the value of another variable and then you use the identified
+
+07:18.350 --> 07:22.610
+property change mechanism to make sure that they are in sync and binding.
+
+07:22.610 --> 07:27.650
+That we are doing here is called bidirectional, because it goes both ways, because when he changes,
+
+07:27.650 --> 07:30.820
+it changes B and when B changes, it changes A.
+
+07:31.580 --> 07:36.540
+So let's see if we can somehow shrinkwrap this binding into a separate class.
+
+07:36.540 --> 07:43.730
+So I'm going to have a public sealed class called Bidirectional Binding and it's going to be a disposable
+
+07:44.300 --> 07:46.850
+so that you can sort of unbind things.
+
+07:46.850 --> 07:53.240
+In actual fact, the reason why I want disposable is that I want to be able to sort of cancel the notifications
+
+07:53.420 --> 07:54.710
+after I called this post.
+
+07:54.950 --> 07:59.720
+So here I'll have a very simple implementation of this pose in the sense that we'll have a flag.
+
+08:00.110 --> 08:06.050
+Let's hold it private bool disposed and when somebody calls this disposable, will just set this flag.
+
+08:06.050 --> 08:07.340
+This post equals true.
+
+08:07.340 --> 08:12.560
+And we'll use this flag inside our notifications so all the magic happens in the constructor.
+
+08:12.560 --> 08:17.420
+But the constructor is going to be really complicated because remember, we want to be able to specify
+
+08:17.810 --> 08:20.360
+what two classes we need to bind.
+
+08:20.370 --> 08:25.070
+So we need to bind a class called first in a class called Second.
+
+08:25.130 --> 08:27.290
+So two objects basically first and second.
+
+08:27.590 --> 08:31.280
+But we need to specify which properties to bind.
+
+08:31.290 --> 08:34.070
+So we'll have a first property on a second property.
+
+08:34.820 --> 08:36.100
+So we need for arguments.
+
+08:36.440 --> 08:39.720
+Let's see if we can find out the types of those arguments.
+
+08:39.720 --> 08:41.150
+So let's have a constructor.
+
+08:41.660 --> 08:43.040
+Bidirectional binding.
+
+08:43.340 --> 08:47.060
+OK, so what is the type of the first object?
+
+08:47.360 --> 08:48.080
+We don't know.
+
+08:48.590 --> 08:53.210
+We could write object here, but this doesn't really help us because then we need to perform the subscriptions.
+
+08:53.210 --> 08:59.000
+But we do know that these objects need to implement NPC, that I notify property change interface.
+
+08:59.270 --> 09:00.800
+So that's going to be the first object.
+
+09:00.800 --> 09:04.830
+And now we want to specify which property of the object we're actually going to buy.
+
+09:05.210 --> 09:10.370
+Now, Windows forms does it using strings, but that's a bit outdated, to be honest.
+
+09:10.370 --> 09:12.440
+We don't use strings anymore either.
+
+09:12.440 --> 09:16.510
+We use the name of but in this particular case, we cannot use name of.
+
+09:16.520 --> 09:19.580
+So instead what we're going to be using is expression trees.
+
+09:20.030 --> 09:28.190
+So we're going to take an expression tree where we don't really care what type of object we're actually
+
+09:28.190 --> 09:29.240
+receiving in this tree.
+
+09:30.110 --> 09:36.590
+So it's going to be an expression of func of object and it's going to be an axis of the first property.
+
+09:37.940 --> 09:43.010
+So basically somebody is going to write something like they're going to write a lambda which returns
+
+09:43.010 --> 09:43.810
+X don't fall.
+
+09:44.090 --> 09:49.130
+So it takes the variable X and accesses the property food.
+
+09:49.850 --> 09:52.160
+And we're going to do the same thing for the second object.
+
+09:52.160 --> 09:57.770
+So we have I NPC I notified property change for the second object because we know that it has to implement
+
+09:57.770 --> 09:58.430
+this interface.
+
+09:58.760 --> 10:05.000
+And then we also specify an expression of the object for the second property.
+
+10:06.260 --> 10:10.910
+Yeah, we go OK, so now let's implement this construct.
+
+10:10.910 --> 10:13.640
+And now there are lots of things that we need to ensure.
+
+10:13.640 --> 10:20.180
+We need to first of all, ensure that the expressions, the property expressions are actually member
+
+10:20.180 --> 10:20.810
+expressions.
+
+10:20.810 --> 10:29.240
+So we need to ensure that property expressions, so X, X, X property is in fact a member expression.
+
+10:29.450 --> 10:33.530
+So that's one thing that we need to make sure because X not who is a member expression.
+
+10:33.530 --> 10:34.490
+So we need to do this.
+
+10:34.800 --> 10:40.790
+And the second thing we need to do is to make sure that when you get food, that food is in fact the
+
+10:40.790 --> 10:41.270
+property.
+
+10:41.270 --> 10:43.790
+So we basically need to make sure that the member.
+
+10:44.710 --> 10:54.500
+All of the above is in actual fact, so the member of this is a property info, it has to be a property,
+
+10:54.500 --> 10:59.240
+cannot be a field, for example, because fields don't generate all of this wonderful.
+
+10:59.250 --> 11:01.070
+I notify property change information.
+
+11:01.250 --> 11:02.810
+So we're going to have lots of casts here.
+
+11:02.810 --> 11:08.960
+So I'm going to say, if so, first of all, first property, the body has to be a member expression
+
+11:10.010 --> 11:11.360
+no, first expert.
+
+11:12.890 --> 11:14.360
+And we need the same for the second.
+
+11:15.170 --> 11:17.600
+So we need a second property.
+
+11:17.980 --> 11:22.280
+The body is no expression, second expression.
+
+11:23.000 --> 11:27.680
+So that's the first set of requirements for what we need to get.
+
+11:28.530 --> 11:32.540
+But that's not all, because now that we have these expressions, we need to make sure that the member
+
+11:32.540 --> 11:35.180
+of those expressions are of type property info.
+
+11:35.190 --> 11:41.240
+So if first expert, what member is property info?
+
+11:41.720 --> 11:42.680
+First Propp.
+
+11:43.950 --> 11:52.770
+And we need to import the info that's a reflection thing, and second expert, that member is property
+
+11:52.920 --> 11:53.570
+info.
+
+11:53.580 --> 11:58.110
+Second problem then and only then can we actually perform the subscription.
+
+11:58.140 --> 12:00.990
+So this is where we would buy directionally subscribe.
+
+12:01.000 --> 12:05.580
+So we would take the first object and would say first, our probably changed plus equals.
+
+12:05.580 --> 12:07.130
+And then you've seen this before.
+
+12:07.350 --> 12:08.880
+We've done this kind of thing before.
+
+12:08.880 --> 12:14.820
+But now we also perform a check for the disposal because remember, we did this disposed thing.
+
+12:14.820 --> 12:19.050
+So if the thing has been disposed, then we don't actually perform the notification.
+
+12:19.050 --> 12:28.560
+So if not disposed, then a second prop, second set value notice we're using Reflexion API here, so
+
+12:28.560 --> 12:29.580
+we're calling set value.
+
+12:29.580 --> 12:30.600
+That's a reflection thing.
+
+12:30.600 --> 12:31.710
+That's not a direct call.
+
+12:32.130 --> 12:37.020
+So we passed the second object and then we take the value of the first property.
+
+12:37.020 --> 12:39.270
+So first property get value.
+
+12:39.900 --> 12:45.000
+So we're using reflexion to get the value of the first property and we're using it to update the second
+
+12:45.000 --> 12:45.390
+property.
+
+12:45.390 --> 12:49.850
+So that's the bidirectional side of things and we'll do the same thing in a different direction.
+
+12:49.860 --> 12:55.500
+So second, property change plus equals generate this whole thing.
+
+12:55.500 --> 13:06.210
+If not disposed, then first problem that first proper set value, first comma and then second property.
+
+13:06.600 --> 13:07.770
+Don't get value.
+
+13:08.340 --> 13:09.940
+Second now go.
+
+13:10.380 --> 13:12.840
+So this is how we would set the whole thing up.
+
+13:13.050 --> 13:17.970
+And now what you have is you have this binding object and we can start using it so we can take all of
+
+13:17.970 --> 13:23.430
+this and we can comment it out because it's just too inconvenient now that we've wrapped everything
+
+13:23.430 --> 13:25.710
+into a single object so we can make a binding.
+
+13:25.710 --> 13:30.430
+We can say using var binding equals new bidirectional binding.
+
+13:30.450 --> 13:31.820
+OK, so what are the arguments?
+
+13:31.890 --> 13:36.030
+So we need to specify the first object which participates in the binding that's product.
+
+13:36.420 --> 13:39.990
+We need to specify which property of that object participate.
+
+13:40.030 --> 13:43.020
+So here is the expression, should we take product name?
+
+13:43.530 --> 13:49.410
+And then the second object, which is window and once again the expression Trefort window dot product
+
+13:49.410 --> 13:49.740
+name.
+
+13:49.740 --> 13:50.400
+There we go.
+
+13:50.400 --> 13:52.810
+This is how we can get everything together.
+
+13:52.810 --> 13:58.680
+And now that we have this binding, when I call product name with smart book, that's going to already
+
+13:58.680 --> 14:01.410
+be wired up behind the scenes and the same goes for Windows.
+
+14:01.410 --> 14:05.760
+So if I say window, the product name equals really smart book.
+
+14:07.110 --> 14:10.440
+Then when I run this, both of these should output.
+
+14:10.440 --> 14:11.400
+Really smart book.
+
+14:11.400 --> 14:13.020
+Let's actually take a look at that.
+
+14:13.260 --> 14:14.570
+It is in fact the case.
+
+14:15.240 --> 14:17.940
+So as you can see, that's exactly what we're getting here.
+
+14:17.940 --> 14:20.310
+We're getting really smart book in both of these cases.
+
+14:20.970 --> 14:22.590
+So whatever tempted to demonstrate.
+
+14:22.590 --> 14:23.370
+Here is two things.
+
+14:23.380 --> 14:28.170
+First of all, how to actually set up two variables so that they depend on one another and they are
+
+14:28.170 --> 14:29.340
+kind of synchronized.
+
+14:29.340 --> 14:30.240
+And that's one thing.
+
+14:30.390 --> 14:34.050
+And notice, we managed to avoid infinite recursion, which is always a risk.
+
+14:34.290 --> 14:40.020
+And the second thing is I've shown you how to actually wrap this in a separate class called a bidirectional
+
+14:40.020 --> 14:45.600
+binding, which does it behind the scenes using a little bit of magic involving expression trés.

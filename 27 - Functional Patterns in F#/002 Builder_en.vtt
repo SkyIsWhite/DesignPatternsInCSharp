@@ -1,0 +1,220 @@
+WEBVTT
+
+00:02.750 --> 00:07.670
+All right, we're now going to take a look at the builder design pattern in our shop, and specifically
+
+00:07.700 --> 00:11.630
+we're going to take a look at the construction of domain specific languages.
+
+00:11.990 --> 00:14.080
+Now, the language we're going to implement is very simple.
+
+00:14.090 --> 00:19.400
+We're going to take a small subset of HTML, which, as I'm sure you know, is the language of the Web,
+
+00:19.670 --> 00:24.240
+and we're going to output this using the F sharp code.
+
+00:24.470 --> 00:28.000
+So essentially, what we want to model is we want to model something like the following.
+
+00:28.010 --> 00:34.190
+We want to model a paragraph that contains some text and it also contains an image so an image can have
+
+00:34.190 --> 00:37.720
+a source of some kind of PMG from some website.
+
+00:38.120 --> 00:42.500
+And this is how you would represent a very small chunk of HDMI.
+
+00:42.590 --> 00:44.630
+And we want to express it in F sharp.
+
+00:45.050 --> 00:50.720
+Now, the way we're going to do this is we're going to leverage the idea of lists because of functional
+
+00:50.720 --> 00:54.730
+lists in F sharp, have a very succinct way of creation.
+
+00:54.740 --> 00:56.990
+So the creation of those lists is really neat.
+
+00:57.020 --> 00:58.870
+So we're going to write something like the following.
+
+00:58.890 --> 01:04.000
+We're going to have let's have a main method, a bunch of arguments.
+
+01:04.490 --> 01:11.060
+So I'm going to create the chunk of our equals and there's going to be a paragraph and the paragraph
+
+01:11.060 --> 01:12.590
+is going to contain the following.
+
+01:12.620 --> 01:20.870
+So it's going to contain some text, maybe check out this picture and it's also going to contain that
+
+01:20.870 --> 01:21.240
+image.
+
+01:21.560 --> 01:27.830
+So here I use IMG and I'm going to say this is going to be an image called, let's say, Pokémon, dot
+
+01:27.830 --> 01:32.320
+com slash, Pikachu dot pantin, for example.
+
+01:32.570 --> 01:37.130
+So we want to be able, first of all, to have this as a valid chunk of code.
+
+01:37.130 --> 01:40.770
+And then we want it to render to a Web page or a chunk of a Web page.
+
+01:41.120 --> 01:42.500
+So how do we implement this?
+
+01:42.530 --> 01:45.920
+Well, this is actually all compiled code.
+
+01:45.950 --> 01:49.820
+The reason why it's compatible is because essentially what's happening here is we're calling a function
+
+01:49.820 --> 01:53.060
+P with an argument, and that argument is a list.
+
+01:53.090 --> 01:57.940
+And and here similarly, we're calling a function called HMG where the argument is just a string.
+
+01:58.190 --> 02:02.000
+So let's take a look at how we can implement both P as well as IMG.
+
+02:02.030 --> 02:08.360
+So let's first of all, implement P, P args so a paragraph can have any number of elements.
+
+02:08.360 --> 02:10.190
+As you can see here, it has two elements.
+
+02:10.190 --> 02:14.000
+Here is element number one and here is element number two.
+
+02:14.000 --> 02:16.230
+So they are separated by line breaks.
+
+02:16.250 --> 02:18.070
+So this paragraph has two elements.
+
+02:18.350 --> 02:24.430
+So we want to take all the arguments and we want to join them using Lindberg's, first of all.
+
+02:24.440 --> 02:28.970
+So I'll say let's all args equals.
+
+02:29.000 --> 02:34.250
+So we'll take the arguments and then we'll use string dot concat.
+
+02:34.460 --> 02:40.130
+So we'll concatenate every single one of those strings with a line break in between every single one
+
+02:40.130 --> 02:40.310
+of them.
+
+02:40.340 --> 02:41.690
+So now we have separate strings.
+
+02:41.690 --> 02:47.570
+And of course what we need to do is we need to take a paragraph and we need to wrap the paragraph tags
+
+02:47.570 --> 02:49.350
+around all of these arguments.
+
+02:49.370 --> 02:55.820
+So here will make a list where inside the list will have the opening paragraph tag, which is P, then
+
+02:55.820 --> 03:00.170
+will have all the arguments and then we'll have the closing tag.
+
+03:00.590 --> 03:01.670
+Let's be like this.
+
+03:01.880 --> 03:09.680
+So we have all of this and we can once again use the concatenation function string concat, just concatenate
+
+03:09.800 --> 03:12.850
+concatenating the whole thing with a line break once again.
+
+03:12.860 --> 03:14.750
+So this is how you build up a paragraph.
+
+03:15.140 --> 03:16.690
+Now let's do the image part.
+
+03:16.700 --> 03:18.560
+So let IMG Eurail.
+
+03:18.560 --> 03:21.110
+So it takes an argument, which is the address of the image.
+
+03:21.110 --> 03:22.760
+And here we simply render the string.
+
+03:22.770 --> 03:27.240
+So we have IMG as our C equals backslash.
+
+03:27.320 --> 03:32.210
+Then the URL, then the closing backslash and then slash.
+
+03:32.360 --> 03:34.440
+And the closing of the tag.
+
+03:34.730 --> 03:37.220
+So this is how you get IMG to work.
+
+03:37.220 --> 03:42.890
+And now that we have this whole thing, we can actually output this to the terminal, for example.
+
+03:42.920 --> 03:52.490
+So here I can say printf n so I can just output the string and I can take all of this HDMI and just
+
+03:52.490 --> 03:56.460
+output it as a string and let's return to zero the end of the program.
+
+03:56.780 --> 04:04.580
+So this is what we have and let's actually run this to take a look at what's what's going on.
+
+04:04.590 --> 04:07.970
+So let's let's run this let's see what we get here.
+
+04:12.030 --> 04:16.140
+All right, so funnily enough, we get absolutely nothing.
+
+04:16.470 --> 04:21.570
+There is absolutely nothing in the output, which is rather depressing, and that's because we forgot
+
+04:21.570 --> 04:23.790
+to mark the thing as an entry point.
+
+04:23.790 --> 04:25.140
+So entry point.
+
+04:25.770 --> 04:27.330
+And let's try this once again.
+
+04:27.330 --> 04:30.210
+Maybe it will work the second time around and.
+
+04:30.900 --> 04:31.350
+Well.
+
+04:33.360 --> 04:34.030
+Here we go.
+
+04:34.260 --> 04:39.150
+So here is a paragraph and inside this paragraph, you get a check out of the picture, IMG, blah,
+
+04:39.150 --> 04:41.990
+blah, blah, and here is the closing paragraph tag.
+
+04:42.480 --> 04:49.470
+So this is a demonstration of how you can use lists as well as functions to have a sort of domain specific
+
+04:49.470 --> 04:54.210
+language implementation of some language or another inside F sharp.

@@ -1,0 +1,481 @@
+WEBVTT
+
+00:02.790 --> 00:08.250
+Now, you're probably thinking I'm just pulling things out of thin air, but there is a combination
+
+00:08.250 --> 00:14.550
+of the proxy and composite design patterns that I want to show you, and this is a composite proxy which
+
+00:14.550 --> 00:22.710
+allows you to implement a pattern or a construct which is quite often called an array of structures,
+
+00:22.710 --> 00:24.730
+structures of array paradox.
+
+00:24.750 --> 00:28.680
+So let me first of all, explain why this exists.
+
+00:28.680 --> 00:33.780
+And it's particularly something that's present in game development, but it will also be relevant to
+
+00:33.780 --> 00:38.080
+anyone who is processing any kind of large volumes of structured data.
+
+00:38.370 --> 00:41.010
+So let's consider the game development example.
+
+00:41.010 --> 00:46.920
+Let's suppose you have a game and the game has a large number of creatures which participate in the
+
+00:46.920 --> 00:47.240
+game.
+
+00:47.250 --> 00:53.010
+So each creature might have certain traits, like, for example, they might have an age.
+
+00:54.180 --> 00:56.250
+So I would have that as a bite.
+
+00:56.250 --> 01:00.120
+And they might also have some sort of position on the game map.
+
+01:00.120 --> 01:05.850
+So they might have X and Y coordinates, for example, and maybe they have something else.
+
+01:06.210 --> 01:10.460
+Now, this data structure, this class, as you can see, I'm using a bind here.
+
+01:10.470 --> 01:14.160
+So that would be a single byte and this would be typically four bytes.
+
+01:14.880 --> 01:17.360
+It's a somewhat uneven structure.
+
+01:17.700 --> 01:20.550
+We don't really know exactly how it's going to be stored.
+
+01:20.550 --> 01:28.310
+Maybe what comes after the byte will be padded so that it fits into the what size of the CPU, who knows?
+
+01:28.500 --> 01:29.580
+So we have this creature.
+
+01:29.580 --> 01:33.530
+Let's suppose that we have, let's say, 100 creatures participating in the game.
+
+01:34.290 --> 01:35.880
+So you might do something like the following.
+
+01:35.880 --> 01:41.340
+You might have an array of creatures equals new creature 100.
+
+01:41.370 --> 01:44.160
+Now, obviously, you would initialize each of the creatures.
+
+01:44.160 --> 01:45.870
+I'm going to sort of skip that part.
+
+01:45.870 --> 01:50.250
+But then what you might want to do is you might want to take, for example, every single creature and
+
+01:50.250 --> 01:52.760
+increase their X coordinates.
+
+01:52.760 --> 01:55.850
+So move them all to the right by one cell or whatever.
+
+01:55.860 --> 02:03.480
+So you'd write something on the following for each Vassy and creatures and you would say C dot X plus
+
+02:03.480 --> 02:03.930
+plus.
+
+02:04.200 --> 02:06.290
+This code looks very innocent.
+
+02:06.300 --> 02:07.350
+It looks very well.
+
+02:07.350 --> 02:08.490
+It's correct code.
+
+02:08.490 --> 02:09.840
+It will in fact work.
+
+02:09.840 --> 02:13.710
+But the problem with this is that this approach is not memory efficient.
+
+02:13.710 --> 02:18.870
+Modern CPU's really like data to be sort of next to one another.
+
+02:18.870 --> 02:25.200
+They really like data to be in a predictable sequence so that, you know, how many bytes to move from
+
+02:25.200 --> 02:26.390
+one location to another.
+
+02:26.400 --> 02:32.250
+Not obviously in this particular case, the compiler and the CPU, they will collectively figure out
+
+02:32.250 --> 02:36.690
+how to access the X coordinate of each of the creatures.
+
+02:36.690 --> 02:41.640
+But if you think about the memory layout, if you think about the way these creatures are laid out without
+
+02:41.640 --> 02:49.170
+all the dot net trappings and somewhat so you have the layout is like this, you have age X, Y, and
+
+02:49.170 --> 02:54.330
+then the other creature, age X Y and then age X Y.
+
+02:54.340 --> 03:00.150
+So essentially when it comes to actually changing the X coordinate, it has to go here and then it has
+
+03:00.150 --> 03:02.600
+to jump to here and then it has to jump to here.
+
+03:02.940 --> 03:03.630
+Well, guess what?
+
+03:03.630 --> 03:10.050
+The CPU would be much more efficient if you were to change the way things are laid out so that first
+
+03:10.050 --> 03:16.650
+of all, you have an array with all the H values and then you have an array with all the X values and
+
+03:16.650 --> 03:21.390
+then you have an array with all the Y values, because then if you were to change all the access, you
+
+03:21.390 --> 03:23.460
+would just go through this part of the array.
+
+03:23.460 --> 03:29.980
+You would go nicely from one cell to another and it would be much faster in on that modern CPU.
+
+03:30.000 --> 03:32.210
+So the question is, how can we actually implement this?
+
+03:32.220 --> 03:38.880
+How can we get this to perform better on modern hardware without really changing anything in terms of,
+
+03:39.510 --> 03:42.230
+you know, fundamentally reworking the creative class?
+
+03:42.270 --> 03:49.320
+Well, the only way you can do this is if you actually implement what I would call a composite proxy
+
+03:49.320 --> 03:55.170
+or you would, in other words, implement a collection of creatures where the internal storage is completely
+
+03:55.170 --> 04:00.540
+different, but the API is more or less the same because the only kind of API that we really want in
+
+04:00.540 --> 04:03.270
+this case is we want to be able to enumerate something.
+
+04:03.270 --> 04:09.930
+So we want something that's innumerable and that stores the creature data but stores it in a very kind
+
+04:09.930 --> 04:10.990
+of bunched up order.
+
+04:11.010 --> 04:14.820
+So first of all, you have all the edges, then you have all the Xs, then you have all the whys.
+
+04:15.120 --> 04:20.120
+So let's try to build such a class so you would have a class called creatures.
+
+04:20.910 --> 04:24.960
+So in the class you would have the size.
+
+04:24.960 --> 04:27.110
+So you specify how many elements there are.
+
+04:27.120 --> 04:31.860
+So I would have preferred read-only int size like this.
+
+04:31.860 --> 04:36.840
+And this is something you would actually provide in the constructor, but in addition you would actually
+
+04:36.840 --> 04:39.000
+store the age as the X's and the whys.
+
+04:39.000 --> 04:42.390
+And once again we can use arrays to store all of this data.
+
+04:42.420 --> 04:51.930
+So here I can have private byte array for age and I can have a private integer arrays for X and Y and
+
+04:51.930 --> 04:57.000
+then what I can do is I can initialize it here in the constructor so I can say that age is going to
+
+04:57.000 --> 05:01.860
+be a new Vitara with the particular size and the same goes for the Xs and the Ys.
+
+05:02.890 --> 05:09.970
+So X equals new injury of size and let's just duplicate this and do the same for Y.
+
+05:10.000 --> 05:15.790
+So this is how you would allocate the data and now you notice that the data is nicely aligned, so to
+
+05:15.790 --> 05:20.470
+speak, in the sense that, first of all, you have all the ages and then you have all the X's and then
+
+05:20.470 --> 05:21.760
+you have all the whys.
+
+05:21.760 --> 05:29.200
+But the question is, how can we actually access any element of this array and actually get an API,
+
+05:29.290 --> 05:31.100
+which looks like a creature?
+
+05:31.130 --> 05:34.600
+Now, I'm not even going to bother extracting the interface from creature.
+
+05:34.610 --> 05:39.890
+I'm just going to give you an identical interface, which is what the proxy power is all about.
+
+05:39.910 --> 05:46.150
+So you would have something like a creature proxy, creature proxy.
+
+05:47.890 --> 05:55.510
+Now, know this, I'm using a struct here because it's not actually going to store any any significant
+
+05:55.510 --> 05:56.110
+values.
+
+05:56.140 --> 06:02.380
+The only thing that we need to store is the index of the creature to access and a reference to the overall
+
+06:02.530 --> 06:03.710
+set of creatures.
+
+06:03.970 --> 06:05.560
+So let me show you how this will work.
+
+06:05.570 --> 06:08.230
+We're going to start by building a constructor.
+
+06:08.230 --> 06:10.000
+So the constructor is going to take two things.
+
+06:10.240 --> 06:16.660
+It's going to take a reference to all the creatures and then is going to take a reference to the index
+
+06:16.660 --> 06:18.870
+of the creature we're actually interested in.
+
+06:19.060 --> 06:24.010
+And so what I'm going to do is I'm actually going to have fields for both of these.
+
+06:24.020 --> 06:28.090
+So let's initialize creatures, let's initialize the index as well.
+
+06:28.210 --> 06:36.190
+And then what we really want to be able to do is to give out a reference which actually refers to a
+
+06:36.220 --> 06:39.710
+certain age of a particular creature or their X or Y coordinates.
+
+06:39.940 --> 06:41.380
+Here is the interesting thing.
+
+06:41.380 --> 06:42.640
+Here is how you would define it.
+
+06:42.640 --> 06:53.690
+You would say public riffe byte age and here you return reath creatures dot age at a particular index.
+
+06:54.490 --> 06:55.570
+So what's going on here?
+
+06:55.600 --> 07:01.420
+Well, whenever somebody accesses this proxy, they can start working with things like age as well as
+
+07:01.420 --> 07:03.190
+the X and Y coordinates as well.
+
+07:03.220 --> 07:10.150
+Let me actually just drop these down here below so you have the age, the X and the Y, but all of these
+
+07:10.150 --> 07:16.110
+really are is they are references into the arrays that we have defined up here.
+
+07:16.120 --> 07:17.260
+So they're not real.
+
+07:17.260 --> 07:20.530
+They're not just ordinary fields of this particular struct.
+
+07:20.530 --> 07:27.820
+Instead, this struct is just a placeholder is just something that allows you to access the particular
+
+07:27.820 --> 07:28.270
+element.
+
+07:28.510 --> 07:31.570
+All that's changeable in the struct is the index.
+
+07:31.570 --> 07:35.160
+So the index tells you where exactly you're looking into.
+
+07:35.890 --> 07:40.810
+Now, theoretically, you could expose the index as public so that people can modify it, but I'm just
+
+07:40.810 --> 07:43.300
+going to keep it here as private.
+
+07:43.300 --> 07:49.330
+So another question is, well, how can we how can we have a for each on creatures?
+
+07:49.900 --> 07:51.650
+That's not exactly difficult.
+
+07:51.670 --> 07:54.910
+We don't even need to explicitly implement get the numerator.
+
+07:54.910 --> 07:56.080
+We just need to write it.
+
+07:56.260 --> 07:59.620
+What I mean is we don't need to implement numerable of things or anything.
+
+07:59.620 --> 08:02.140
+I can just say public I enumerator.
+
+08:03.520 --> 08:10.270
+Creature proxy, so here in notice, I'm going to be giving out these proxies as opposed to actual creatures.
+
+08:10.600 --> 08:13.920
+And so I Annamarie to create your proxy, get enumerator.
+
+08:15.670 --> 08:17.080
+OK, and here is what we do.
+
+08:17.110 --> 08:22.840
+So for every single position, from zero to size, we return a new creature proxy.
+
+08:22.870 --> 08:26.260
+So here I'm going to say four and pause equals zero.
+
+08:26.590 --> 08:30.010
+Pause less than the size plus plus pause.
+
+08:30.010 --> 08:37.030
+What we're going to do is we're going to return or yield, return, not rather yield return a new creature
+
+08:37.030 --> 08:44.800
+proxy where this gets passed into the actual proxy and the index has pause.
+
+08:45.640 --> 08:52.770
+OK, so what what we can do with this set up is we can use almost the same API is up here, but get
+
+08:52.810 --> 08:54.080
+all the performance benefits.
+
+08:54.310 --> 08:57.430
+So essentially you'll say something like var creatures too.
+
+08:57.430 --> 09:03.430
+And instead of using an array you will say new creatures passing in the value of 100.
+
+09:03.460 --> 09:05.860
+So here you would create a hundred creatures.
+
+09:05.860 --> 09:13.150
+And obviously if you look at the actual constructor here for creatures, we are automatically allocating
+
+09:13.150 --> 09:15.730
+all the memory of those creatures actually required.
+
+09:15.730 --> 09:20.530
+So there is no need to then go through every single one of them and call a constructor on it like we
+
+09:20.530 --> 09:24.720
+would here, because this is just a placeholder for 100 nulls, basically.
+
+09:24.970 --> 09:32.800
+So here, once you have crèches, two, you can say for each of our see in creatures two, and here
+
+09:32.800 --> 09:36.040
+you would say C dot X plus plus.
+
+09:36.340 --> 09:39.570
+So this is how you would actually modify every single one of the creatures.
+
+09:39.580 --> 09:41.210
+But this time round is completely different.
+
+09:41.230 --> 09:45.090
+We can actually replace this far by specifying the time explicitly.
+
+09:45.100 --> 09:48.360
+And you can see that the time here is crèches, dot creature proxy.
+
+09:48.370 --> 09:51.110
+So we're essentially modifying something on a proxy.
+
+09:51.130 --> 09:56.380
+So when you say Searoad X plus plus what you're really getting, when you're saying, see that X is
+
+09:56.380 --> 10:02.390
+you're referencing into creatures dot, dot, X at a particular index.
+
+10:02.390 --> 10:05.800
+So add the index that you've specified for that particular creature.
+
+10:05.800 --> 10:10.930
+You're going into it, you're getting that reference and then using that reference to increment that
+
+10:10.930 --> 10:11.930
+particular value.
+
+10:12.430 --> 10:18.280
+So the take away from this example, and it's sufficiently complicated example, is that sometimes you
+
+10:18.280 --> 10:21.600
+build proxies for purposes of performance improvements.
+
+10:21.820 --> 10:27.970
+So in this case, we want all the data related to a particular well, all the data of a particular data
+
+10:27.970 --> 10:34.720
+type, in actual fact, being put together in an array of essentially a contiguous chunk of memory that's
+
+10:34.720 --> 10:38.760
+easier and more efficient to traverse and having to jump between the elements.
+
+10:38.950 --> 10:44.980
+So we put this all together and we now are able to to go through this.
+
+10:45.220 --> 10:49.690
+So just to explain you the terminology behind all of this.
+
+10:49.930 --> 10:54.340
+So this thing is essentially an array of structures, a process.
+
+10:54.520 --> 10:58.930
+And what we've done here is we've made a structure of arrays.
+
+10:58.930 --> 11:05.050
+And what we talk about is we talk about this ÁGÚST SLA duality.
+
+11:05.320 --> 11:08.770
+So we talk about the way that you can represent things one way or another.
+
+11:08.770 --> 11:14.260
+If you look at programming languages such as J, for example, that's where this is implemented implicitly
+
+11:14.260 --> 11:20.500
+in the language you can just say this is the struct is going to be an S struct and then it gets automatically
+
+11:20.500 --> 11:20.890
+converted.
+
+11:20.900 --> 11:27.100
+We don't have that kind of automation here in C Sharp, but we are able to build proxies which do pretty
+
+11:27.100 --> 11:28.210
+much the same thing.

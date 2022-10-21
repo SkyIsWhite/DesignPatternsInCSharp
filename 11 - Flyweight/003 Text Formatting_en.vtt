@@ -1,0 +1,370 @@
+WEBVTT
+
+00:02.590 --> 00:07.960
+One of the examples of the flyweight pattern that actually appeared in the original Gang of Four book
+
+00:07.990 --> 00:09.870
+was to do with text editing.
+
+00:09.880 --> 00:15.580
+So now we're going to replicate that example and we're going to take a look at how editing text can
+
+00:15.580 --> 00:18.110
+be done with a memory saving technique.
+
+00:18.130 --> 00:21.510
+So let's suppose that we want to output formatted text.
+
+00:21.530 --> 00:27.400
+I'm going to make a class called formatted text and we're going to have plain text, but we're also
+
+00:27.400 --> 00:28.360
+going to have formatting.
+
+00:28.360 --> 00:36.940
+So I'll make a constructor constructor like so and I'm going to take the plain text in the constructor
+
+00:36.940 --> 00:38.590
+and we're going to save plain text.
+
+00:38.900 --> 00:41.820
+So have a read-only variable here.
+
+00:41.830 --> 00:47.930
+But in addition, I'm going to have a way of capitalizing certain characters in the text.
+
+00:47.950 --> 00:51.630
+Now you might be thinking, well, how can we actually capitalize?
+
+00:51.640 --> 00:53.810
+How can we specify what to capitalize?
+
+00:53.860 --> 00:59.800
+Now, one of the approaches is to take every single character in the plaintext string and give it an
+
+00:59.800 --> 01:04.250
+additional boolean value, indicating whether or not you want to capitalize that particular letter.
+
+01:04.420 --> 01:10.720
+So here's what we can do, is we can make another array, so I'll have a private to capitalize.
+
+01:11.500 --> 01:14.350
+And when we initialize the text, we also initialize this array.
+
+01:14.360 --> 01:22.090
+So we say capitalize equals Kneubuhl with plain text length like so.
+
+01:22.240 --> 01:27.850
+And then if you want to capitalize a particular range of letters, you can call a method so you can
+
+01:27.850 --> 01:34.900
+call a method called capitalized and you can provide this method with the start and positions that you
+
+01:34.900 --> 01:35.800
+want to capitalize.
+
+01:35.810 --> 01:42.370
+So in start and end and all this will do is it will set the boolean values in that array so it will
+
+01:42.370 --> 01:54.370
+have a for loop for AI starting at start, AI being less than or equal to end and you would say capitalize
+
+01:55.150 --> 01:57.220
+at index AI equals true.
+
+01:58.110 --> 01:58.540
+All right.
+
+01:58.550 --> 02:03.700
+So when it comes to rendering the capitalized text we can override to a string.
+
+02:04.030 --> 02:09.190
+So here is the two string override and here we have to rebuild the string, taking into account the
+
+02:09.190 --> 02:10.450
+capitalization settings.
+
+02:10.660 --> 02:17.700
+So we'll make a string builder, string builder like so, and then we'll go through each of the characters.
+
+02:18.250 --> 02:24.610
+So the way I do it typically is I say for each of our C in plain text, but then I use Rishabh or to
+
+02:24.610 --> 02:29.600
+change it from four each to just an ordinary four with an index I for example.
+
+02:29.770 --> 02:35.770
+So what we do is we say as byroade append and we decide whether or not we want to capitalize that character.
+
+02:35.780 --> 02:40.000
+So we have the character C, so depending on whether we want to capitalize it.
+
+02:40.010 --> 02:48.160
+So we check, capitalize, capitalize at or if it's true then we want to say charge up to Opper on C,
+
+02:48.160 --> 02:49.750
+otherwise we just dependancy.
+
+02:50.200 --> 02:54.830
+So you have the string builder and then you return espero to string and that's pretty much it.
+
+02:54.850 --> 02:57.480
+So let's see how we can leverage this approach.
+
+02:57.490 --> 03:04.660
+So we've implemented capitalization so I can say var F.T. equals new formatted text and we're going
+
+03:04.660 --> 03:05.590
+to have a string here.
+
+03:05.620 --> 03:09.610
+This is a brave new world that we go.
+
+03:09.610 --> 03:13.540
+And then I will say that I want to capitalize the world brave.
+
+03:13.540 --> 03:19.390
+So I'm going to say after you capitalize, the starting index is 10, the ending index is 15, which
+
+03:19.390 --> 03:21.430
+corresponds to this word.
+
+03:21.730 --> 03:27.430
+And then I will write line the word right line, F.T. There we go.
+
+03:27.440 --> 03:31.150
+So we execute this and hopefully get our result.
+
+03:32.600 --> 03:33.280
+There we go.
+
+03:33.320 --> 03:36.680
+So this is a brave new world and the word brave is capitalized.
+
+03:37.000 --> 03:42.860
+Now, the problem with this approach is that we're spending a lot of memory for flags which don't need
+
+03:42.860 --> 03:48.190
+to be there, essentially, instead of specifying every letter, whether it's capitalized or not.
+
+03:48.200 --> 03:51.530
+And you can think of, you know, bold and italic taking up even more memory.
+
+03:51.770 --> 03:56.990
+What we might want to do is we might want to just specify that we have a bunch of ranges and those ranges
+
+03:56.990 --> 03:57.650
+are capitalized.
+
+03:57.650 --> 04:01.500
+So a range is just an indication of the starting value and ending value.
+
+04:01.580 --> 04:07.990
+When we go into two string, we can check those ranges and apply capitalization if that is what is required.
+
+04:08.000 --> 04:11.480
+So let's implement a kind of better formatted text.
+
+04:11.480 --> 04:15.930
+So let's make a new class called better formatted text here.
+
+04:16.280 --> 04:19.510
+So it's going to be very similar to the previous example.
+
+04:19.520 --> 04:23.810
+We're going to have plain text as a field initialized in the constructor.
+
+04:23.810 --> 04:30.170
+But in addition, what we're going to have is we're going to have an inner class, so make an inner
+
+04:30.170 --> 04:31.350
+class called text range.
+
+04:31.730 --> 04:36.260
+Now, the text range is going to tell us about the start and end positions of the range.
+
+04:36.260 --> 04:37.070
+It applies to us.
+
+04:37.070 --> 04:40.460
+So we'll have something like public and start and end.
+
+04:40.790 --> 04:46.640
+And in addition, we can have the settings here so we can have public bool capitalize and then you can
+
+04:46.640 --> 04:49.870
+have other formatting options like bold italic, whatever.
+
+04:50.330 --> 04:55.430
+OK, so the only thing you want from a text range apart from this information, is to figure out whether
+
+04:55.430 --> 04:58.850
+this text range covers a particular position, any particular index.
+
+04:58.860 --> 05:05.840
+So you say public bool covers its position and the position has to be greater than or equal to start
+
+05:05.840 --> 05:07.150
+and less than or equal to.
+
+05:07.160 --> 05:15.590
+And so we return exactly that return position greater than or equal to start and position less than
+
+05:15.590 --> 05:16.340
+or equal to.
+
+05:16.340 --> 05:17.390
+And there we go.
+
+05:17.420 --> 05:18.950
+So that's what we want from a range.
+
+05:18.950 --> 05:24.230
+And now we can return these ranges in better formatted text and now we can give the user arrange to
+
+05:24.230 --> 05:24.830
+work with.
+
+05:25.220 --> 05:27.350
+So that would be the flyweight object.
+
+05:27.360 --> 05:37.100
+So we say public text range get range in start and end, but in addition to returning the range, we
+
+05:37.100 --> 05:41.740
+might also want to keep the range so that we know it's part of the formatting.
+
+05:41.750 --> 05:44.800
+So if the user customizes that, we apply the formatting later on.
+
+05:45.020 --> 05:51.020
+So far, this will have a private list of text ranges and we're going to call this one formatting.
+
+05:52.010 --> 05:57.830
+So we'll make a new list of text ranges and what we do when somebody requests for arranges, we make
+
+05:57.830 --> 05:58.190
+the range.
+
+05:58.190 --> 06:05.960
+First of all, so far, áng equals new text range and we specify start, start equals start and and
+
+06:05.960 --> 06:07.970
+equals and like.
+
+06:07.970 --> 06:10.250
+So let's not forget the comma here.
+
+06:10.460 --> 06:11.780
+And then we do two things.
+
+06:11.780 --> 06:14.570
+First, we add it to the set of formatting options.
+
+06:14.570 --> 06:15.920
+So formatting dot.
+
+06:16.970 --> 06:22.340
+And we have the range, but we also return the range, so we do two things at the same time, and what
+
+06:22.340 --> 06:29.510
+this allows us to do is it allows us to get the range from a chunk of text and then customize this range.
+
+06:29.540 --> 06:31.070
+So here is the new approach.
+
+06:31.070 --> 06:35.690
+We say var BFC equals new, better formatted text.
+
+06:36.020 --> 06:44.110
+And here I will just copy of the string over here like so and then I will say better formatted text
+
+06:44.110 --> 06:47.810
+don't get range so I'll get the range from 10 to 15.
+
+06:47.820 --> 06:51.410
+So that will be my flyweight object and then I will say please capitalize it.
+
+06:51.770 --> 06:54.500
+So capitalize equals true.
+
+06:54.620 --> 06:55.150
+That will go.
+
+06:55.160 --> 07:01.640
+And then once again we can write line BFT, but before we do we have to implement a string because now
+
+07:01.640 --> 07:03.710
+the capitalization is done differently.
+
+07:03.720 --> 07:09.950
+So coming back to our better formatted string, we now need to do two string override and we're going
+
+07:09.950 --> 07:12.850
+to do once again as equals new string builder.
+
+07:13.220 --> 07:16.730
+But this time around, things are going to be different because we're going to be going through all
+
+07:16.730 --> 07:20.300
+of the ranges checking whether this particular point is covered by that range.
+
+07:20.300 --> 07:23.430
+If it is, then we apply all the customizations in that range.
+
+07:23.660 --> 07:31.900
+So once again, I'll do let's do a for each of see in plain text string Avago.
+
+07:32.360 --> 07:35.300
+So I'll change from four each to four once again.
+
+07:35.300 --> 07:37.580
+Very convenient quick action here.
+
+07:37.910 --> 07:43.910
+So we will have for each of our range in formatting.
+
+07:45.320 --> 07:50.870
+So we check whether this particular letter, the letter will run right now when the index is actually
+
+07:50.990 --> 07:52.750
+covered by the range.
+
+07:52.760 --> 08:03.530
+So if Range covers this particular index and I and somebody once capitalization, then we capitalize
+
+08:03.530 --> 08:12.410
+the string so we change C to char dot to upper C and then of course we append the letter, we append
+
+08:12.410 --> 08:17.630
+the letter C, so that's the implementation and see what's going on here.
+
+08:17.630 --> 08:20.170
+We have to return obviously espero to string.
+
+08:20.690 --> 08:27.110
+So we've implemented the same approach using the flyweight pattern by operating on these text ranges.
+
+08:27.110 --> 08:30.170
+And now we can actually try this out because we've got everything in place.
+
+08:30.470 --> 08:32.090
+So let's execute the program.
+
+08:32.090 --> 08:34.460
+And as you can see, we're getting exactly the same result.
+
+08:34.670 --> 08:39.920
+But now we're not wasting memory on these huge arrays of formatting for every individual character.
+
+08:39.920 --> 08:41.180
+Instead, we're being specific.
+
+08:41.180 --> 08:45.680
+We're saying that this particular range should be capitalized and then we check against the ranges to
+
+08:45.680 --> 08:48.710
+make sure that the right letter is, in fact, capitalized.
+
+08:48.860 --> 08:51.250
+And that's the essence of the flyweight pattern.

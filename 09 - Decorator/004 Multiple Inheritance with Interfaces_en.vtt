@@ -1,0 +1,358 @@
+WEBVTT
+
+00:01.090 --> 00:07.510
+One of the things which I find most disappointing in both the Java and Donette ecosystems is the lack
+
+00:07.510 --> 00:10.330
+of multiple inheritance, which is sometimes very useful.
+
+00:10.630 --> 00:16.000
+Let me show you some of the problems that you end up encountering if you try to emulate multiple inheritance.
+
+00:16.150 --> 00:21.340
+And this is, in fact, the implementation of the decorator pattern because that's what you end up doing.
+
+00:21.580 --> 00:24.220
+So let's suppose that you have a class called Bud.
+
+00:24.430 --> 00:27.910
+Now a bird can fly so we can make a method called fly.
+
+00:27.910 --> 00:31.840
+And here I'm just going to write line soaring in the sky.
+
+00:32.230 --> 00:36.690
+OK, so we can also have a class called Lizard and you can see where this is going.
+
+00:36.700 --> 00:45.410
+So the lizard class will have a method called crawl and we're going to write line crawling in the dirt.
+
+00:45.790 --> 00:52.660
+OK, so we now want to make a dragon, which is both a bird and a lizard, and it would make sense to
+
+00:52.660 --> 00:54.520
+inherit from both of these classes.
+
+00:54.530 --> 01:02.020
+Unfortunately, we cannot we cannot make a dragon which inherits from both bird and lizard because we
+
+01:02.020 --> 01:03.790
+can only have one parent.
+
+01:03.790 --> 01:09.880
+Class suddenly simplifies things for language designers, but makes things more difficult for us in
+
+01:09.880 --> 01:10.690
+the real world.
+
+01:11.050 --> 01:14.820
+So how do you implement the traits of both bird and lizard in Dragon?
+
+01:14.830 --> 01:19.690
+And the answer is, well, of course you use the decorative pattern and you extract the interfaces.
+
+01:19.690 --> 01:24.610
+So you start using interfaces and here we can extract the interface from bird.
+
+01:25.000 --> 01:26.620
+So here we get this Pop-Up.
+
+01:26.620 --> 01:29.710
+We get to specify which members we want in the interface.
+
+01:29.720 --> 01:32.350
+So I want the fly method, for example.
+
+01:32.350 --> 01:37.410
+And similarly we can go into the lizard and we can extract the interface here as well.
+
+01:37.420 --> 01:41.570
+So here we take the Croll method and we put it into Elizardo.
+
+01:42.520 --> 01:49.690
+So having made these two interfaces, what we now do is we say that a dragon is both AI bird and AI
+
+01:49.690 --> 01:51.180
+lizard at the same time.
+
+01:51.180 --> 01:54.820
+And, um, the question is, well, how do you implement these methods?
+
+01:54.820 --> 01:56.080
+How do you implement Kraul?
+
+01:56.080 --> 01:57.480
+How do you implement fly?
+
+01:57.490 --> 01:59.400
+Do you want to just replicate?
+
+01:59.410 --> 02:02.200
+I mean, one option would be just to cut and paste everything.
+
+02:02.200 --> 02:08.290
+So you simply take the entire method and you paste it in here and you do the same for the lizard and
+
+02:08.290 --> 02:09.690
+you assume that this is OK.
+
+02:09.700 --> 02:14.820
+Unfortunately, you want to make changes in only a single location.
+
+02:14.830 --> 02:21.820
+It's kind of like the single responsibility principle in a way, in the sense that you only want one
+
+02:21.820 --> 02:23.740
+location where something is changed.
+
+02:23.740 --> 02:30.100
+You don't want to change the behaviour of flying in both bird and dragon unless in fact they fly in
+
+02:30.100 --> 02:32.970
+some sort of different ways, which is quite possible.
+
+02:32.980 --> 02:34.690
+So how do you implement this?
+
+02:34.720 --> 02:40.930
+Well, one of the ways is you simply keep both a bird and a lizard as members of dragons.
+
+02:40.930 --> 02:49.180
+So you have something like bird, bird, lizard, lizard, and then of course, you need to initialize
+
+02:49.180 --> 02:49.830
+them somewhere.
+
+02:49.840 --> 02:55.060
+So typically, I mean, if you're using a dependency injection framework, you would, of course, make
+
+02:55.540 --> 02:58.870
+make a constructor which just initializes all the fields.
+
+02:58.870 --> 03:04.240
+Or of course, if you wanted to just do a demo like I'm doing, you can get away from all of this and
+
+03:04.240 --> 03:07.720
+just use the sort of initializes in place here.
+
+03:07.930 --> 03:09.370
+And this is also very easy.
+
+03:09.370 --> 03:16.180
+Whatever choice you make, you need to implement the interfaces of AIBA and elicit and you need to proxy
+
+03:16.180 --> 03:16.870
+them over.
+
+03:16.870 --> 03:19.920
+You need to forward them to the appropriate types.
+
+03:20.140 --> 03:25.240
+So the way this is done using these schopper is you open up the generate menu and you choose delegating
+
+03:25.240 --> 03:30.490
+members and then you get to select all the members you want to delegate, which in our case is everything.
+
+03:30.500 --> 03:33.010
+So I just press return here and here's what we get.
+
+03:33.010 --> 03:39.130
+So we automatically implemented both iBOT and I illicit by implementing the appropriate parts of the
+
+03:39.130 --> 03:39.520
+interface.
+
+03:39.520 --> 03:45.640
+So now we have a method called cruel and a method called fly, and these just get sent over to Lizard
+
+03:45.820 --> 03:48.310
+Croll and Bird Fly so we can try using this.
+
+03:48.670 --> 03:54.010
+So here I can say for the equals new dragon.
+
+03:54.430 --> 04:02.110
+And here, for example, I can fly, Dragon can fly and Dragon can crawl like so.
+
+04:02.410 --> 04:09.190
+And if I execute this well, hopefully we get the right output, the output with us both flying as well
+
+04:09.190 --> 04:12.780
+as crawling using the bird and lizard class respectively.
+
+04:13.060 --> 04:14.920
+Hurray, everything works.
+
+04:15.190 --> 04:20.950
+OK, so this is a very simple example and typically the multiple inheritance which is done using this
+
+04:20.950 --> 04:26.020
+approach can hit a rock when you have certain other issues, like let me give you an example.
+
+04:26.140 --> 04:31.270
+Let's suppose that both bird as well as Lizard implement some sort of property.
+
+04:31.270 --> 04:35.560
+And we're going to try this diamond inheritance problem that you have in C++.
+
+04:35.560 --> 04:41.620
+What if both of the base classes implement the same thing so both a bird and lizard have a weight?
+
+04:42.780 --> 04:49.900
+So I'm just going to have it as a prop. so we have wait here and we have wait here that we go.
+
+04:50.100 --> 04:55.380
+OK, so now what we want is we want these wait properties to be part of the interface.
+
+04:55.380 --> 05:01.380
+So here we do pull members up and we select the wait like so.
+
+05:01.380 --> 05:05.640
+And now it's part of the interface here and we do the same for the birds.
+
+05:05.640 --> 05:12.320
+So once again, we go and we pull members up, press return and now wait as part of Ibut and Ķiģelis.
+
+05:12.510 --> 05:15.480
+But this this leads to an interesting problem.
+
+05:15.480 --> 05:18.170
+We now have sort of two implementations of the same thing.
+
+05:18.180 --> 05:24.030
+So if I go all tenter and I implement the misremembers, you can see the way it is shown here twice.
+
+05:24.300 --> 05:30.330
+And if I press finish like so then we get explicit implementations so we get an explicit elizardo.
+
+05:30.330 --> 05:33.240
+Wait and I but don't wait as well.
+
+05:33.820 --> 05:39.450
+Of course the real question is what do you put in the letter and the center, because you might assume
+
+05:39.630 --> 05:45.150
+that a correct way is required in order for a bird to fly and the lizard to crawl.
+
+05:45.150 --> 05:50.280
+You need the correct weight measurements to be able to perform those operations, which means that you
+
+05:50.280 --> 05:52.740
+have to have a way of setting this.
+
+05:52.950 --> 05:59.730
+On the other hand, what becomes really creepy is what does it mean to say that weight equals so and
+
+05:59.730 --> 06:00.060
+so?
+
+06:00.300 --> 06:05.650
+Notice that it's highlighted in red here, cannot access private property weight.
+
+06:05.970 --> 06:08.180
+Now, why is the property private?
+
+06:08.340 --> 06:09.900
+Did we really make it private?
+
+06:09.900 --> 06:17.730
+And if we make it public here and if we make it public here as well, that's not really going to help
+
+06:17.730 --> 06:18.090
+much.
+
+06:18.090 --> 06:23.160
+Notice that the modifier public is not valid for explicit interface implementation.
+
+06:23.160 --> 06:24.890
+So you cannot even have this properly.
+
+06:24.900 --> 06:31.010
+So the way you would typically do this and this is quite creepy, is you would implement the problem
+
+06:31.020 --> 06:31.520
+yourself.
+
+06:31.770 --> 06:36.360
+So this is one of those cases where having something delegated for you isn't good enough.
+
+06:36.810 --> 06:42.450
+So you would have something like wait public and wait, for example.
+
+06:42.750 --> 06:48.960
+Now, what you can do now is you can obviously said the wait and this actually satisfies the interface.
+
+06:48.960 --> 06:57.090
+Amazingly enough, what you get to see is that weight right now is the correct the correct sort of tool
+
+06:57.090 --> 06:58.980
+for setting the weight internally.
+
+06:58.980 --> 07:05.610
+Unfortunately, the center is completely wrong because remember, we need the bird and the lizard to
+
+07:05.610 --> 07:08.100
+have their own properties set correctly.
+
+07:08.100 --> 07:09.570
+So how would you do those?
+
+07:09.850 --> 07:13.410
+And the answer is, well, you would apply them in the center.
+
+07:13.560 --> 07:21.870
+But I just want to show you that we are using them so soaring in the sky with weights and then outputs
+
+07:21.870 --> 07:24.130
+the formating dollar here.
+
+07:24.150 --> 07:32.180
+So with weight weights and crawling in the dirt with weight and once again, output of weight in here.
+
+07:32.790 --> 07:35.310
+So this is how we're going to do it now.
+
+07:35.310 --> 07:41.400
+And of course, if we now do this, so if I set the weight, first of all, before I actually try to
+
+07:41.400 --> 07:46.440
+fly and crawl, then we're going to get the values of zero, of course, because we've only set the
+
+07:46.440 --> 07:48.420
+weight in the original dragon.
+
+07:48.420 --> 07:50.010
+That's where we actually store it.
+
+07:50.190 --> 07:55.670
+So in order to kind of fix all of this, what we do is we define the center.
+
+07:55.680 --> 07:59.160
+So first of all, you would go ahead and you would make a property with a backing field.
+
+07:59.460 --> 08:00.690
+Now the getter is OK.
+
+08:00.870 --> 08:06.300
+We return the weight and the setter is almost okay in the sense that we set the weight and that's it.
+
+08:06.300 --> 08:14.900
+But in addition, what we do is we say birds dart weight equals value and we say lizzard don't.
+
+08:14.970 --> 08:17.210
+Weight is also equal to this value.
+
+08:17.220 --> 08:22.410
+And this way is the only way that you can actually get those methods operating correctly.
+
+08:22.650 --> 08:29.250
+So as you can see, even though the interface based approach kind of works by using the decorator pattern,
+
+08:29.250 --> 08:30.390
+it is a bit ugly.
+
+08:30.420 --> 08:35.130
+Even with all the magic that reshape it brings to the table, with all the generating the delegated
+
+08:35.130 --> 08:38.190
+members, it's still very inconvenient to work with.

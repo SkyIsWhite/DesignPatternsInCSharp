@@ -1,0 +1,262 @@
+WEBVTT
+
+00:02.600 --> 00:05.120
+All right, so those were the creation of patterns.
+
+00:05.150 --> 00:07.690
+Now let's talk about the structural design patterns.
+
+00:07.700 --> 00:09.890
+There are more of them than the recreational ones.
+
+00:10.160 --> 00:16.250
+So first of all, we looked at an adapter which converts the interface that you get from some system
+
+00:16.250 --> 00:18.560
+or other to the interface that you need.
+
+00:18.590 --> 00:25.520
+We also discussed the fact that an adapter, by virtue of performing the conversion, can spawn additional
+
+00:25.520 --> 00:27.580
+objects that can spawn additional data.
+
+00:27.770 --> 00:33.740
+And if you are calling the adapter many times on the same data, then it might make sense to actually
+
+00:33.740 --> 00:35.920
+cash the results of the adaptation.
+
+00:35.930 --> 00:40.670
+So if your adapter generates some temporary information, you might want to cache this information for
+
+00:40.670 --> 00:41.630
+subsequent calls.
+
+00:41.970 --> 00:47.720
+Then we looked at the bridge design pattern, which simply decouples the abstraction from implementation.
+
+00:47.750 --> 00:54.170
+So instead of having that sort of Cartesian product explosion in the number of subclasses, what you
+
+00:54.170 --> 00:56.470
+do is you use composition instead.
+
+00:56.480 --> 01:02.090
+So you simply take out a part of the hierarchy and the separate interface and then you refer to it via
+
+01:02.100 --> 01:04.060
+an ordinary field, for example.
+
+01:04.340 --> 01:09.980
+Then we looked at the composite design pattern and then the composite design pattern lets clients treat
+
+01:09.980 --> 01:14.300
+individual objects as well as compositions of objects uniformly.
+
+01:14.300 --> 01:20.720
+And we saw how easy it is to do this in the in that framework, because essentially any scalar object,
+
+01:20.720 --> 01:28.880
+any singular object can present itself to be a collection of these objects by simply implementing innumerable
+
+01:28.880 --> 01:29.510
+of itself.
+
+01:29.540 --> 01:35.030
+So if you have a class called, you implement innumerable AFU and then you simply yield return this
+
+01:35.030 --> 01:40.700
+and that way, you present yourself as an enumerable collection containing just a single element.
+
+01:40.700 --> 01:44.930
+And that element of yourself is the class that is actually providing the functionality.
+
+01:46.010 --> 01:51.770
+Then we looked at decorator, which allows you to attach responsibilities to objects so you have an
+
+01:51.770 --> 01:55.010
+object defined already and you want to expand its functionality.
+
+01:55.010 --> 02:00.470
+But if inheritance isn't available for you and there are many cases where it isn't like, for example,
+
+02:00.470 --> 02:04.760
+we've seen String Builder, which is a sealed class you cannot inherit from it.
+
+02:04.910 --> 02:11.030
+So you build a decorator, you build an object which aggregates the string builder in this case, copies
+
+02:11.030 --> 02:15.710
+all of the functionality and suddenly rush hour makes it easy to create all the delegating members.
+
+02:15.920 --> 02:18.800
+And then you add additional functionality on top of it.
+
+02:18.800 --> 02:23.990
+And thereby you can have a decorator on top of that object and you can also have decorator's of decorators,
+
+02:24.200 --> 02:28.760
+unfortunately, because in C sharp you cannot inherit from a type argument.
+
+02:28.940 --> 02:34.380
+You cannot automatically gets all the objects behavior by inheritance.
+
+02:34.550 --> 02:42.380
+So in C Sharp, the decorator is usable as a dynamic property, a dynamic decorator that you construct
+
+02:42.380 --> 02:45.620
+by passing the decorated object as a constructor argument.
+
+02:45.740 --> 02:52.790
+But having a decorator which uses inheritance and uses the layering of generic arguments is not a feasible
+
+02:52.790 --> 02:55.240
+approach, unfortunately, in the in that framework.
+
+02:55.940 --> 02:59.750
+So moving on, let's talk about more structural design pattern.
+
+02:59.760 --> 03:06.230
+So we looked at facade and facade essentially provides a single unified interface over a set of classes
+
+03:06.230 --> 03:06.770
+or systems.
+
+03:06.770 --> 03:11.510
+And this is one module where instead of doing a synthetic demo, I've showed you something which is
+
+03:11.510 --> 03:17.630
+real world, which is a console class which actually hides behind itself a rather large set of subsystems,
+
+03:17.630 --> 03:19.970
+and it provides a high level interface.
+
+03:19.970 --> 03:22.520
+So you can take a console and you can write a line on it.
+
+03:22.520 --> 03:27.780
+But on the other hand, you also have access to all the internals, all the buffers, the viewport,
+
+03:27.780 --> 03:29.840
+it's the texture manager and so on.
+
+03:29.840 --> 03:32.600
+And this is something that is a design decision.
+
+03:32.600 --> 03:38.390
+So essentially you can have a façade which just exposes the commonly accessible information, the kind
+
+03:38.390 --> 03:39.320
+of high level designs.
+
+03:39.320 --> 03:44.300
+But you can leak some of the implementation details through the facade and there is no problem in it.
+
+03:44.300 --> 03:47.360
+And that way you are serving two different groups of people.
+
+03:47.360 --> 03:51.400
+You're serving people who just want to get things done and they get the high level interface.
+
+03:51.410 --> 03:54.230
+They're sort of unified, single, usable interface.
+
+03:54.380 --> 03:56.270
+But you also get the power users that way.
+
+03:56.270 --> 04:01.760
+So you serve the power users who maybe want to customize the system a little bit and you give the functionality
+
+04:01.940 --> 04:02.820
+for that as well.
+
+04:03.260 --> 04:09.380
+Then we looked at the flyaway design pattern, which is a way of efficiently supporting the very large
+
+04:09.380 --> 04:10.760
+number of similar objects.
+
+04:10.760 --> 04:13.610
+And it's essentially a space optimization technique.
+
+04:13.620 --> 04:19.520
+So when you have a game with many people called John Doe, for example, what you want to do is not
+
+04:19.520 --> 04:26.870
+store John Doe in every single row of a database, if that is what is being, you know, suggested here.
+
+04:26.960 --> 04:30.680
+Instead, you keep the names separate and then you have links to those names.
+
+04:30.680 --> 04:35.570
+So if 100 people are called John Doe, they will have just a single integer pointing to that particular
+
+04:35.570 --> 04:35.910
+name.
+
+04:36.320 --> 04:42.200
+Then we looked at the proxy design pattern and the proxy essentially provides a surrogate object which
+
+04:42.200 --> 04:46.100
+forwards the calls to the real object while performing additional functions.
+
+04:46.100 --> 04:53.000
+And those functions can be well, they can be virtually anything but common uses of proxies, for example,
+
+04:53.000 --> 04:59.480
+protection proxies, where you check whether the user has the access rights to call some method on a
+
+04:59.480 --> 05:00.830
+particular object or they.
+
+05:00.930 --> 05:07.350
+Can be, for example, remoting proxy's where the object doesn't really live on the system in the same
+
+05:07.350 --> 05:13.600
+process as the process you're working with, but having calls on that object actually sort of serialize
+
+05:13.610 --> 05:18.900
+as all the arguments and passes them to, let's say, a process running on some other machine and then
+
+05:18.900 --> 05:22.590
+the rest of the processing happens on that other machine.
+
+05:22.620 --> 05:24.900
+So there are different kinds of proxies.
+
+05:24.900 --> 05:28.310
+But the general idea is that you replicate the interface once again.
+
+05:28.560 --> 05:33.330
+But in the implementation of the interface, in addition to just forwarding the calls, you also do
+
+05:33.480 --> 05:34.860
+additional operations.
+
+05:35.190 --> 05:40.050
+Now, we also have this thing called Dynamic Proxy, which is very popular in Darknet and elsewhere.
+
+05:40.050 --> 05:45.840
+And that dynamic proxy, instead of having the proxy made at compile time where you make the proxy by
+
+05:45.870 --> 05:50.400
+making the appropriate classes and whatever, it actually creates a proxy dynamically.
+
+05:50.430 --> 05:52.050
+So this is dynamic programming.
+
+05:52.050 --> 05:56.660
+It's basically constructing types at runtime as opposed to compile time.
+
+05:56.790 --> 06:03.030
+And the upside here is that in certain cases you don't have to manually replicate the target object
+
+06:03.030 --> 06:03.390
+API.
+
+06:03.390 --> 06:09.300
+Instead, what you can do is you can specify additional behaviors to be added to every single method
+
+06:09.300 --> 06:10.980
+of a particular class, for example.

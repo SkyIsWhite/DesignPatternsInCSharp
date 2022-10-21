@@ -1,0 +1,439 @@
+WEBVTT
+
+00:03.010 --> 00:07.870
+You know, I really don't like those demos where there is no good writing and all the code has already
+
+00:07.870 --> 00:12.450
+been written, but unfortunately this is one of those demos because it's rather complicated.
+
+00:12.460 --> 00:18.070
+And the reason why it's rather complicated is because I've managed to rip this out of a commercial product.
+
+00:18.080 --> 00:23.290
+So this is actual production code as opposed to something wishy washy, although it's a production code
+
+00:23.290 --> 00:27.300
+that I have to cut down very significantly to explain some of the ideas.
+
+00:27.730 --> 00:34.930
+So we are talking about the interpreter design pattern and to a degree about the visitor design pattern
+
+00:34.930 --> 00:35.350
+as well.
+
+00:35.350 --> 00:38.990
+And let me outline the problem that this chunk of code is trying to solve.
+
+00:39.520 --> 00:46.210
+So let's suppose that we want to define mathematical expressions in XML like here.
+
+00:46.420 --> 00:51.570
+So here you see there is a math tag and then there is a plus and two values, two and three.
+
+00:51.580 --> 00:53.230
+So we're trying to do two plus three.
+
+00:53.470 --> 00:56.280
+And in actual fact, this is a valid language.
+
+00:56.290 --> 01:00.940
+This is a language called Matha Mel, which is used behind the scenes in many mathematical editors,
+
+01:01.180 --> 01:07.660
+including the Microsoft Equation editor, which if you include formulae in Microsoft Word, for example,
+
+01:07.930 --> 01:11.220
+you can output you can grab the output as math Amelle.
+
+01:11.440 --> 01:15.120
+So this is the kind of text that we intend to interpret them.
+
+01:15.120 --> 01:21.190
+We want to have the interpretive design pattern, but it's also going to be mapped onto something more
+
+01:21.190 --> 01:26.650
+complicated than what we've seen before, because what we want to do is we want to map these things
+
+01:26.980 --> 01:29.890
+onto cases of a the union.
+
+01:29.890 --> 01:31.590
+And you can see that unión right here.
+
+01:31.600 --> 01:35.500
+So we have a type called expression, which is a discriminated union.
+
+01:35.500 --> 01:41.880
+And you can either have a math which contains a bunch of expressions.
+
+01:42.040 --> 01:47.770
+So this is the top-level element or you can have a plus which has a left hand side and the right hand
+
+01:47.770 --> 01:48.100
+side.
+
+01:48.100 --> 01:49.300
+And you can see an example here.
+
+01:49.330 --> 01:53.680
+So here is a plus and here is the left hand side and here is the right hand side.
+
+01:53.920 --> 01:58.380
+And you can have a value in this case that would be two or three.
+
+01:58.720 --> 02:04.020
+So we want to somehow map this text onto this discriminated union.
+
+02:04.030 --> 02:09.130
+And also notice here we have self-doubt VAO, which basically evaluates the thing.
+
+02:09.150 --> 02:13.690
+So if it's a value, we just return that value cast to an end.
+
+02:13.870 --> 02:18.520
+If it is a plus, then we add up the left and right hand side.
+
+02:18.530 --> 02:20.710
+Don't forget, we have to evaluate them, first of all.
+
+02:20.950 --> 02:27.100
+And if it's the whole math thing, then we just evaluate whatever is the first element, which is Abdulahad.
+
+02:27.100 --> 02:29.010
+Remember, M is a list.
+
+02:29.200 --> 02:31.300
+So the first element of the list is called head.
+
+02:31.450 --> 02:32.590
+That's what we evaluate.
+
+02:32.620 --> 02:36.430
+So when we evaluate math, we essentially evaluate the plus and we return the plus.
+
+02:36.880 --> 02:40.810
+So this is how you would define the structure and this is how you would define the code.
+
+02:40.840 --> 02:44.080
+The problem is how do you glue those things together?
+
+02:44.080 --> 02:49.690
+Because you want to somehow automatically make a mapping between the name of the tag here.
+
+02:49.690 --> 02:55.330
+This is an XML tag and you want to map this XML tag to this particular discriminated union case.
+
+02:55.360 --> 03:00.590
+Now, the trick to do this is to pre compute the constructors for the different union cases.
+
+03:00.970 --> 03:05.170
+Now, here is the actual process in action.
+
+03:05.200 --> 03:11.500
+So this is basically reflection but reflection for the functional programming side, reflection for
+
+03:11.500 --> 03:12.840
+the F sharp side of things.
+
+03:12.940 --> 03:15.940
+So it's not the kind of reflection you see in CCAR, but it's very similar.
+
+03:16.450 --> 03:19.780
+So first of all, we can use FSR time to get all the union cases.
+
+03:19.780 --> 03:24.730
+So we take an expression and we get all the union cases and then we do something clever.
+
+03:24.730 --> 03:31.180
+For every single one of those cases, we recompute the union constructor so we pre compute the constructor
+
+03:31.300 --> 03:34.390
+for that particular element of the discriminated union.
+
+03:34.390 --> 03:39.430
+So we pre computer constructor for math and constructor for plus a constructor for value and so on and
+
+03:39.430 --> 03:39.880
+so forth.
+
+03:39.880 --> 03:45.100
+And of course as we do this, we have to take into account the fact that these things actually take
+
+03:45.100 --> 03:46.210
+additional arguments.
+
+03:46.210 --> 03:50.650
+So the plus is composed of a left and right hand sides, the value is composed of a value and so on
+
+03:50.650 --> 03:51.210
+and so forth.
+
+03:51.640 --> 03:54.520
+So we have to pre compute it in all of these cases.
+
+03:54.850 --> 04:00.160
+Now, what you see here in the recursive build function is a rather complicated way of making these
+
+04:00.160 --> 04:05.740
+cases dependent upon the parameters that we have passed from XML, because what we want to be able to
+
+04:05.740 --> 04:11.440
+do is we want to be able to pass this particular chunk of XML and actually automatically turn it into
+
+04:11.440 --> 04:14.380
+a discriminated union agglomeration if you want.
+
+04:15.160 --> 04:16.370
+So how is this done?
+
+04:16.390 --> 04:19.210
+Well, it's done down here.
+
+04:19.220 --> 04:22.000
+So let's take a look at how the whole thing can work.
+
+04:22.000 --> 04:25.900
+How can we actually read the XML and how can we turn it into something meaningful?
+
+04:26.200 --> 04:29.320
+So here we take the text, which is that chunk of XML I've shown you.
+
+04:29.330 --> 04:33.880
+We create an example reader from that and then an XML document.
+
+04:33.880 --> 04:35.110
+So X document load.
+
+04:35.130 --> 04:38.590
+Now this is from system XML dot link I believe.
+
+04:38.620 --> 04:43.360
+So this is a fairly, fairly obvious stuff, but this is where interesting things happen.
+
+04:43.370 --> 04:49.180
+So we take the root of the document, which is of course that math thing, and we call recursive build
+
+04:49.180 --> 04:49.530
+on it.
+
+04:49.870 --> 04:54.610
+So recursive build is that scary function that we looked at, which takes a root X element.
+
+04:54.610 --> 04:57.360
+And then we do some stuff to that element.
+
+04:57.370 --> 05:02.170
+Of course, what we do depends on, for example, whether it has any inner.
+
+05:02.250 --> 05:06.870
+Elements, whether it has any arguments and so on and so forth, so it's a rather complicated procedure
+
+05:06.870 --> 05:08.120
+that is happening here.
+
+05:08.130 --> 05:13.650
+However, the result of this procedure is you end up with a discriminating union case, which inside
+
+05:13.650 --> 05:15.210
+itself contains all the other cases.
+
+05:15.240 --> 05:17.850
+So this is what you get when you actually pass the whole thing.
+
+05:18.180 --> 05:23.770
+And then, of course, we can print the past result, but we can also evaluate the result.
+
+05:23.800 --> 05:28.630
+Now, remember, evaluation is basically the calculation of the whole thing.
+
+05:28.650 --> 05:32.070
+So if you've got the overall math element, you just evaluated the head.
+
+05:32.070 --> 05:36.210
+If you've got a plus, you can evaluate the left hand side plus the right hand side.
+
+05:36.210 --> 05:41.150
+And it's also possible to do it via a member like this so you can do Seftel value instead.
+
+05:41.460 --> 05:44.460
+So those two possibilities are available to you.
+
+05:44.490 --> 05:50.640
+So this is essentially a demonstration of the visitor design pattern because we are traversing a structure.
+
+05:50.640 --> 05:54.570
+And while we do this, we kind of evaluate the the different elements here.
+
+05:54.790 --> 05:58.590
+Of course, we have it in we are doing it in a recursive way.
+
+05:58.590 --> 06:03.800
+So when you call even your left hand side, you may end up here once again or you may end up here.
+
+06:04.080 --> 06:08.970
+So it's all going to be a larger cause of call, which is why there is no separate variable for the
+
+06:08.970 --> 06:10.200
+result of the calculation.
+
+06:10.220 --> 06:16.790
+So we keep the calculation on the stack as we do to recursion to to sort of calculate this whole thing.
+
+06:17.430 --> 06:25.640
+Well, that recursion in some cases, and then we can actually output both the result of the past structure.
+
+06:26.160 --> 06:27.960
+So we pass the numeric expression.
+
+06:27.960 --> 06:32.340
+It should be should be able to say two plus three, and then we can also calculate its value.
+
+06:32.790 --> 06:33.830
+So let's actually run this.
+
+06:33.840 --> 06:35.910
+Let's take a look at what the output is.
+
+06:36.120 --> 06:40.230
+Nothing particularly groundbreaking will be happening here.
+
+06:40.230 --> 06:42.930
+We just see that two plus three is equal to five.
+
+06:43.320 --> 06:49.470
+But the implementation itself is rather interesting and quite different to what you have in C Sharp.
+
+06:49.470 --> 06:52.410
+So the difference is just to outline the differences once again.
+
+06:52.410 --> 06:54.360
+First of all, we use discriminated unions.
+
+06:54.360 --> 06:59.460
+So that is a structure which behind the scenes, of course, it just uses ordinary inheritance and whatnot.
+
+06:59.460 --> 07:04.830
+But in terms of the usability, it's a bit more usable than working with hierarchies of classes.
+
+07:04.830 --> 07:10.500
+In C Sharp, the discriminated union basically gets populated with the result.
+
+07:10.710 --> 07:20.040
+With the past result of the XML, there is some magic with like reflexion type magic for computing the
+
+07:20.040 --> 07:27.300
+union constructors just to make things a bit faster and then plenty of work to make sure that we pass
+
+07:27.300 --> 07:30.570
+everything correctly, regardless of the number of arguments that this thing has.
+
+07:30.570 --> 07:31.950
+And of course we do it recursively.
+
+07:32.220 --> 07:38.700
+So here, if we have a bunch of values inside the tag, then we recursively build those elements as
+
+07:38.700 --> 07:41.630
+well and we kind of assign them all.
+
+07:41.910 --> 07:45.030
+And there is some, you know, some box invocations here and whatnot.
+
+07:45.030 --> 07:49.470
+So you're welcome to actually download this code and simply analyze it because I'm not going to go through
+
+07:49.470 --> 07:49.590
+it.
+
+07:49.590 --> 07:54.750
+It's really not important to our particular discussion, because all I'm trying to show here is that
+
+07:54.750 --> 07:59.490
+there is this alternative approach to building, first of all, interpreters in the sense that you can
+
+07:59.490 --> 08:05.760
+pass not into just a disjoined bunch of classes, inheriting everything from classes, but a kind of
+
+08:05.760 --> 08:09.440
+integrated structure that you can subsequently do pattern matching on.
+
+08:09.450 --> 08:10.830
+So this is not a useful thing.
+
+08:10.840 --> 08:12.810
+So you match against a particular expression.
+
+08:13.020 --> 08:18.390
+And of course, every single case of the discriminated union has a bunch of arguments and you can sort
+
+08:18.390 --> 08:21.240
+of examine those arguments and do something to them.
+
+08:21.240 --> 08:25.290
+Now, C Sharp is kind of catching up to that in the sense that you see sharp, you can do very similar
+
+08:25.290 --> 08:29.580
+things right now, but in F sharp, it's a bit more natural, it's a bit more succinct.
+
+08:29.590 --> 08:34.380
+So that is something that you might want to consider if you were building an application in C Sharp,
+
+08:34.380 --> 08:34.860
+for example.
+
+08:34.860 --> 08:37.290
+But part of an application needs to do passing.
+
+08:37.290 --> 08:43.060
+You might want to consider just using F sharp just for this particular purposes, the purpose.
+
+08:43.060 --> 08:48.000
+So parsing some expression, building a tree out of it and traversing that tree, so long as you don't
+
+08:48.000 --> 08:51.480
+have to expose that tree to the c sharp side of things, everything is OK.
+
+08:51.480 --> 08:56.970
+If you do have to expose it, then you start seeing problems, because as soon as you start projecting
+
+08:56.970 --> 09:04.230
+code from F sharp to C sharp, you get not incompatibilities, but you get sort of impedance mismatches
+
+09:04.230 --> 09:06.330
+because obviously the syntax is different.
+
+09:06.330 --> 09:08.880
+The way you work with constructs is different.
+
+09:08.880 --> 09:12.960
+So you're not going to be able to work with a discriminated union.
+
+09:12.960 --> 09:16.700
+Cases succinctly from C Sharp, you probably know that already.
+
+09:17.190 --> 09:23.340
+So that is another approach that I wanted to demonstrate how to leverage the interpretive pattern as
+
+09:23.340 --> 09:24.720
+well as the visitor pattern as well.
+
+09:24.720 --> 09:29.250
+So pattern matching an F sharp is great for implementing the visitor pattern.
+
+09:29.250 --> 09:32.100
+And of course the ideas is different.
+
+09:32.110 --> 09:33.780
+You typically rely on recursion.
+
+09:33.780 --> 09:39.140
+You typically rely on calling yourself once again from inside that pattern.
+
+09:39.150 --> 09:44.360
+And there obviously there is additional depth to the pattern support in F sharp.
+
+09:44.370 --> 09:49.010
+So, for example, there are partial patterns and recursive partial patterns and whatnot.
+
+09:49.230 --> 09:55.020
+So this is something that is worth investigating if you have this particular problem in your application.

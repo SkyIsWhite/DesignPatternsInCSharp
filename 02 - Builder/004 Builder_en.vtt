@@ -1,0 +1,403 @@
+WEBVTT
+
+00:03.120 --> 00:10.350
+All right, so we're now going to construct an HTML bill there is so that all of this code is more understandable.
+
+00:10.500 --> 00:16.560
+So we're going to start by defining an HTML element, because that's what is going to be the building
+
+00:16.560 --> 00:19.600
+block of just about everything that we do with HTML.
+
+00:19.830 --> 00:26.820
+So I'm going to make a class called HTML Element and this is going to represent just a single tag like
+
+00:26.820 --> 00:32.470
+the pétanque here, for example, with some content, maybe some text, but it can also contain other
+
+00:32.470 --> 00:32.950
+attacks.
+
+00:33.090 --> 00:35.880
+So this particular tag can contain other tags.
+
+00:35.880 --> 00:41.160
+For example, here we have an unordered list tag which contains a bunch of list item tags.
+
+00:41.430 --> 00:45.180
+So we're going to support the scenario now in the HTML element.
+
+00:45.510 --> 00:48.630
+I'm going to have a bunch of public fields.
+
+00:48.630 --> 00:50.670
+In this case, I'm not going to be doing properties.
+
+00:50.670 --> 00:52.680
+It's too complex, for our example.
+
+00:52.680 --> 00:55.140
+So I'll just have public fields, code name and text.
+
+00:55.330 --> 00:57.660
+I'll also have a list of child elements.
+
+00:58.080 --> 01:05.970
+So public list of HTML element called elements and I may as well initialize it straight away and will
+
+01:05.970 --> 01:11.940
+also have perhaps we'll do indentation because when I run this you can see that it's all output has
+
+01:11.940 --> 01:12.630
+a single line.
+
+01:12.630 --> 01:18.030
+Maybe I want it looking a bit prettier when I output everything nicely formatted.
+
+01:18.030 --> 01:21.690
+So I'm going to have an indentation level the size of the indent.
+
+01:22.380 --> 01:29.680
+So that's going to be private int indent size equal to two, for example.
+
+01:29.700 --> 01:32.010
+So we're going to indent everything by two spaces.
+
+01:32.760 --> 01:37.560
+OK, now let's make a bunch of constructors so I'll make an empty constructor, but I'll also make a
+
+01:37.560 --> 01:40.380
+constructor which initializes the name in the text.
+
+01:40.950 --> 01:44.940
+So let's go in here and initialize the name and the text as well.
+
+01:45.570 --> 01:46.230
+All right.
+
+01:46.620 --> 01:52.980
+I'm going to reduce some of these since they can now be simplified in C sharp seven, even though rehabber
+
+01:52.980 --> 01:57.150
+hasn't caught up to yet and still complains about the question mark.
+
+01:57.150 --> 01:58.490
+We're going to disregard this.
+
+01:58.770 --> 02:00.270
+So what's going on now?
+
+02:00.350 --> 02:06.660
+Now we want to output this HTML element has a string and we're going to keep using the string builder
+
+02:06.660 --> 02:07.830
+because it's a nice builder.
+
+02:07.830 --> 02:10.230
+Its convenient way of building up string.
+
+02:10.250 --> 02:15.300
+So what I'm going to do is define private string to string empl.
+
+02:15.660 --> 02:21.870
+So this is the implementation of two string that we're subsequently going to output in the official
+
+02:21.870 --> 02:28.920
+to string override, but we're going to have an extra parameter for the indent indent and that's precisely
+
+02:28.920 --> 02:32.220
+what we're going to be using when we implement that ordinary two string.
+
+02:32.250 --> 02:38.910
+So if I override the ordinary two string that's going to return to string input with a starting indentation
+
+02:38.910 --> 02:40.880
+of zero seems obvious enough.
+
+02:41.130 --> 02:44.210
+So what we're going to do here is we're going to make a string builder.
+
+02:45.810 --> 02:49.010
+We're also going to make the current level indentation.
+
+02:49.020 --> 02:50.330
+And this is going to be interesting.
+
+02:50.340 --> 02:52.560
+So we have the indent level.
+
+02:53.490 --> 02:59.700
+How many steps have moved from the left margin and we have the indentation size.
+
+03:00.150 --> 03:02.220
+I'm going to use spaces to indent.
+
+03:02.520 --> 03:09.330
+So when I'm going to do is make a new string where a single space is going to be repeated a certain
+
+03:09.330 --> 03:09.910
+number of times.
+
+03:09.910 --> 03:16.650
+So that number of times is obviously indent size multiplied by however many indents we actually need.
+
+03:16.650 --> 03:18.730
+So then size times indent end.
+
+03:19.280 --> 03:22.490
+OK, so now I need to spend the opening tag.
+
+03:22.500 --> 03:24.360
+So that's going to be speed or depend.
+
+03:24.570 --> 03:27.480
+And here I'm just going to use string interpolation.
+
+03:27.480 --> 03:29.580
+I'll open the indent which I have called.
+
+03:29.580 --> 03:31.830
+I followed by the tag.
+
+03:31.830 --> 03:34.500
+So here is the opening and then the tag name.
+
+03:35.670 --> 03:40.920
+Closing and then, well, we may as well do a penalty and let's just put a line break at the end of
+
+03:40.920 --> 03:41.070
+it.
+
+03:41.370 --> 03:42.570
+OK, so that's our tack.
+
+03:42.870 --> 03:45.050
+Now, the tag may contain some tax.
+
+03:45.050 --> 03:51.630
+So I'm going to say, if not string is now or whitespace text, we're going to output the text as well.
+
+03:51.640 --> 03:58.130
+So here I'm going to append, first of all, an indentation similar to the indentation we have here.
+
+03:58.320 --> 04:02.100
+But remember, we're now outputting text, so we need to indent by one.
+
+04:02.610 --> 04:05.340
+So I'm going to copy this over pasted here.
+
+04:05.340 --> 04:09.240
+But this time round, it's going to be indent plus one here.
+
+04:10.090 --> 04:16.170
+So that's the indentation for the text, but a semicolon and then I add the text as well.
+
+04:16.170 --> 04:23.910
+So as be append text like so and then I well we may as well do a line, so let's put a line break at
+
+04:23.910 --> 04:24.330
+the end of it.
+
+04:24.630 --> 04:26.250
+OK, so that's the text.
+
+04:26.400 --> 04:27.720
+Now we have the children.
+
+04:27.730 --> 04:30.930
+So if this tag contains a bunch of other tags, we can do it for each.
+
+04:30.960 --> 04:40.080
+Once again we can say for each of the elements, so for each var e in elements we as betore depend.
+
+04:40.320 --> 04:42.030
+And here we just do a recursive call.
+
+04:42.390 --> 04:46.650
+So we say we take the element and we do two string mple.
+
+04:46.650 --> 04:52.080
+So it's a recursive call with the indentation level of indent plus one, and that's how you get the
+
+04:52.080 --> 04:55.980
+nested indentation for each of the inner HDMI elements.
+
+04:56.220 --> 04:57.810
+And then of course you have to close the tag.
+
+04:57.840 --> 05:06.120
+So this is similar to what we have here except with the slash like so, so close the tag and we return
+
+05:06.120 --> 05:09.910
+as B dot to string, so we return the overall string.
+
+05:10.200 --> 05:17.310
+OK, so now we have an HTML element and we may as well build an HTML builder, which is actually a convenient
+
+05:17.310 --> 05:21.290
+API for constructing a tree of these HTML elements.
+
+05:21.600 --> 05:22.520
+So let's do that.
+
+05:22.620 --> 05:32.280
+So I'm going to have a class called HTML Builder like so now I'm going to start the builder by specifying
+
+05:32.280 --> 05:38.550
+the root tag and I want the name of the Rohtak because we're going to have some kind of root.
+
+05:38.550 --> 05:42.600
+So I'll have a HTML element called The Root here and I'll initialize it.
+
+05:42.720 --> 05:44.960
+Just put a default initialization.
+
+05:44.970 --> 05:47.370
+This explains why I made the default constructor.
+
+05:47.370 --> 05:49.470
+So I don't have to specify anything here.
+
+05:49.470 --> 05:55.980
+But when I go ahead and I make my constructor, when I make an HTML builder, what I can do is I can
+
+05:55.980 --> 06:02.430
+take a string which specifies the name, and then what I can do is I can assign it so I can say root
+
+06:03.150 --> 06:06.420
+dot name equals root name.
+
+06:06.420 --> 06:08.810
+But in addition I might want to store it as a variable.
+
+06:08.850 --> 06:10.710
+We're going to need it in just a moment.
+
+06:10.710 --> 06:14.070
+So I'll initialize a field with this parameter as well.
+
+06:14.310 --> 06:21.220
+OK, so now that I have this kind of API, I can add a method to actually add a child.
+
+06:21.420 --> 06:31.770
+Public void has child string, child name and string child text and this adds a child to whichever object
+
+06:31.770 --> 06:32.280
+I'm working with.
+
+06:32.280 --> 06:41.070
+So I make an HTML element, html element with child name and child text like so.
+
+06:41.430 --> 06:49.740
+And then of course I take the root element and I take its elements and I say I really aliments add and
+
+06:49.740 --> 06:50.250
+add.
+
+06:50.250 --> 06:52.770
+This particular element seems simple enough.
+
+06:52.920 --> 06:59.010
+This approach doesn't scale very well by the way, but it's good for kind of showing a overall design
+
+06:59.010 --> 06:59.690
+of the builder.
+
+06:59.970 --> 07:03.300
+So now that we have the setup, we need a few more pieces.
+
+07:03.300 --> 07:07.380
+Actually, we're not done yet because we want to output this as a string.
+
+07:07.560 --> 07:10.480
+So we implement the two string override here.
+
+07:11.460 --> 07:13.620
+Interesting that it doesn't complete that we go.
+
+07:13.650 --> 07:18.260
+So here we return and we take the route and just do Roodt to string.
+
+07:18.390 --> 07:21.380
+That's how we return the string representation.
+
+07:21.390 --> 07:26.880
+We might also want to have an implementation for clearing the entire builder because our builder is
+
+07:26.880 --> 07:28.680
+stateful, keeps this route.
+
+07:29.100 --> 07:31.740
+So we may as well clear it in some sort of method.
+
+07:31.740 --> 07:33.120
+So I'll make a method called clear.
+
+07:33.450 --> 07:35.790
+And here what we're going to do is we're going to reset the route.
+
+07:35.790 --> 07:40.350
+So I'm going to say route equals new HTML element, but we want to keep the name.
+
+07:41.040 --> 07:45.690
+And that's why I made a field here called Route Name because we want to keep that name.
+
+07:45.690 --> 07:47.990
+So I'll say name equals route name.
+
+07:48.150 --> 07:48.680
+There we go.
+
+07:49.080 --> 07:55.590
+So we have this clear method and now we can start using the whole thing so we can actually have a similar
+
+07:55.590 --> 07:58.380
+construct, an unwanted list with two elements.
+
+07:58.380 --> 08:01.590
+But we're going to be using an HTML builder.
+
+08:01.590 --> 08:05.370
+So I'm going to see if our builder equals new HTML builder.
+
+08:06.360 --> 08:09.300
+The top level route name is an unordered list.
+
+08:09.300 --> 08:09.840
+You will.
+
+08:10.350 --> 08:11.880
+And then I'm going to add the children.
+
+08:11.880 --> 08:13.410
+So I'm going to say builder dot.
+
+08:13.830 --> 08:20.480
+Yeah, child list item called Hello and I'll just duplicate this and put Weld in here.
+
+08:20.490 --> 08:26.980
+So these are the two items and then we can once again write Line Builder, talk to String Xi.
+
+08:27.090 --> 08:33.570
+The two string is redundant and if I execute this well, we forgot a closing round brackets somewhere.
+
+08:33.580 --> 08:34.260
+Let's take a look.
+
+08:35.090 --> 08:41.810
+So we have an extra round bracket needed here, and if we execute this well, you see it's now much
+
+08:41.810 --> 08:44.060
+prettier because we added the indentation.
+
+08:44.060 --> 08:47.090
+But really, the benefit isn't just the indentation.
+
+08:47.090 --> 08:50.570
+The benefit is that we've structured it in an object oriented way.
+
+08:50.570 --> 08:57.350
+We've built up a tree and we essentially made a special construct called an e-mail builder, which is
+
+08:57.620 --> 09:04.130
+its sole purpose in life is to build up trees of HTML elements and this is the result of its output.

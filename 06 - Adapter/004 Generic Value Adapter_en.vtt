@@ -1,0 +1,1078 @@
+WEBVTT
+
+00:02.860 --> 00:07.570
+In this lecture, we're going to take a look at an adapter variation, we're going to take a look at
+
+00:07.570 --> 00:11.210
+yet another implementation of the adapter pattern, but this one is completely different.
+
+00:11.230 --> 00:16.360
+This one is unlike anything you've ever seen because it's called a generic value adapter.
+
+00:16.360 --> 00:19.070
+And it's actually something very silly, as you'll see in a moment.
+
+00:19.090 --> 00:25.120
+It's something that is completely unnecessary in languages like C++, but in C Sharp, unfortunately,
+
+00:25.120 --> 00:26.070
+it is necessary.
+
+00:26.080 --> 00:28.480
+And we're going to take a look at how to construct it.
+
+00:28.480 --> 00:34.030
+And we're also going to kind of explore this approach a bit further and look at some of the other patterns
+
+00:34.030 --> 00:34.410
+as well.
+
+00:34.420 --> 00:39.300
+So this is going to be a rather feature packed demo, but essentially the idea is as follows.
+
+00:39.310 --> 00:41.830
+Let's suppose that you want to implement vectors.
+
+00:41.980 --> 00:44.510
+You want to represent the idea of a vector.
+
+00:44.550 --> 00:49.630
+Now, a vector can be in two dimensional space, a three dimensional, four dimensional space, whatever.
+
+00:49.900 --> 00:52.310
+It can also be made up of different types.
+
+00:52.310 --> 00:56.890
+So the components of the vector like X, Y and Z, for example, they can be integers, they can be
+
+00:56.890 --> 01:00.940
+floating point values or double values or decimal or something else.
+
+01:00.940 --> 01:07.780
+And you want to have some sort of generic approach to implementing all of this, using generics, using
+
+01:07.780 --> 01:08.530
+generic types.
+
+01:08.740 --> 01:14.160
+At the end, what you want is you want to have types like vector to F and vector three.
+
+01:14.170 --> 01:20.320
+So you want to have a class for a two component vector of floating point values, the three component
+
+01:20.320 --> 01:22.480
+vector of integer values and so on and so forth.
+
+01:22.490 --> 01:26.980
+So you want all of this and the question is how can you actually get it using generic programming?
+
+01:27.010 --> 01:34.600
+Well, a very naive approach would be to just make a class called Vector where you have two generic
+
+01:34.600 --> 01:35.200
+parameters.
+
+01:35.200 --> 01:40.330
+You specify the type of the elements that you and the store, and then you specify the dimensions.
+
+01:40.330 --> 01:43.170
+How many dimensions does this vector actually have?
+
+01:43.450 --> 01:49.930
+So you would kind of specify it like this and then you would have some maybe array of data where those
+
+01:49.930 --> 01:53.650
+components are actually stored and then you would have the constructor.
+
+01:53.890 --> 01:56.290
+So in the constructor you have to initialize the data.
+
+01:56.290 --> 01:59.170
+You would say data equals nuzzi array.
+
+01:59.440 --> 02:01.090
+And here is the problem.
+
+02:01.090 --> 02:05.680
+Here is where it's entirely uncertain what you have to put inside the square brackets.
+
+02:05.680 --> 02:11.380
+So you obviously want the array to match the number of dimensions, like put it D here, but that's
+
+02:11.380 --> 02:17.110
+not going to work because in C sharp you cannot put literals inside generic types.
+
+02:17.120 --> 02:20.100
+You can only have actual types in there.
+
+02:20.110 --> 02:22.010
+So we cannot write something like Ívar.
+
+02:22.840 --> 02:31.630
+So actually it's not so much a var you cannot make a class called let's say vector to F which inherits
+
+02:31.840 --> 02:36.600
+from vector float Colma two because you are not allowed to put the two in here.
+
+02:36.730 --> 02:40.590
+And this leads to a design pattern called the generic value adapter.
+
+02:40.600 --> 02:48.280
+Basically what you do is you adopt a literal, a literal value to a type, and it's actually very simple
+
+02:48.280 --> 02:48.730
+to do.
+
+02:49.120 --> 02:54.550
+What you do is you make an abstract class or an interface which just yields that particular value.
+
+02:54.580 --> 03:02.380
+So I can say, for example, public interface, high integer, which just gives us a value so we only
+
+03:02.380 --> 03:08.260
+have a getter and then we can implement this interface in classes and have those classes implement the
+
+03:08.260 --> 03:10.580
+interface and actually yield that particular value.
+
+03:10.600 --> 03:14.830
+So instead of doing the whole thing at compile time, you're doing that same thing at runtime.
+
+03:15.190 --> 03:20.590
+So here I can build a class called Two, which implements the integer interface.
+
+03:20.590 --> 03:26.920
+And here all I have to do is implement a value and just return the value to and we can sort of duplicate
+
+03:26.920 --> 03:27.570
+this, for example.
+
+03:27.580 --> 03:32.890
+So if you want the three components, something you would call the class three and here you would return
+
+03:32.890 --> 03:40.480
+the number three, we can actually make it a bit nicer by wrapping or sort of creating a synthetic class
+
+03:40.480 --> 03:41.590
+around these classes.
+
+03:41.590 --> 03:44.710
+Or indeed, you could use a namespace here if you wanted to.
+
+03:44.710 --> 03:50.800
+But I'll just make a class just to because basically these classes, they kind of exist at the top level
+
+03:50.800 --> 03:55.240
+of the namespace that we have, and that's not always a good thing.
+
+03:55.240 --> 03:57.250
+So I might make something like the following.
+
+03:57.250 --> 03:59.380
+Public static class dimensions.
+
+04:00.220 --> 04:04.150
+So the dimensions are two, three, and you can add other things here.
+
+04:04.160 --> 04:11.210
+So we've basically taken a value like two or three and we've adapted the value using a class.
+
+04:11.260 --> 04:12.840
+So it's a different kind of an adaptor.
+
+04:12.850 --> 04:22.000
+But now this whole thing becomes roughly legal because here we can say the D is an integer, so we can
+
+04:22.000 --> 04:26.860
+say the D is an integer and furthermore it has a default constructor.
+
+04:26.860 --> 04:30.300
+That's another requirement in order to be able to actually initialize it.
+
+04:30.640 --> 04:35.470
+So here, instead of using D, you would make a new instance of the and then you would get its value
+
+04:35.470 --> 04:39.740
+because well remember, it's an integer, so it has a value and this is now legal.
+
+04:40.030 --> 04:42.000
+So this whole construct is now legal.
+
+04:42.010 --> 04:44.850
+You can now start actually manufacturing time.
+
+04:44.860 --> 04:50.680
+So for example, if you wanted let's say you wanted the two components integer, you would make a class
+
+04:50.680 --> 04:58.300
+called Vector to Y and you would inherit from a vector where the first argument is the type.
+
+04:58.310 --> 05:01.630
+So in this case and obviously and the second argument is the.
+
+05:01.750 --> 05:06.680
+Number of dimensions, so you say dimensions dot to there we go, so.
+
+05:06.680 --> 05:12.060
+So this is something that's completely valid and there is no problem in actually getting it to work.
+
+05:12.070 --> 05:18.990
+We can actually start using it so we can say things like VAVA equals new vector to AI and, you know,
+
+05:19.000 --> 05:21.610
+you can you can customize the data here.
+
+05:21.820 --> 05:27.580
+But in order to customize the data, of course, you have to give the vector additional features, like,
+
+05:27.580 --> 05:33.270
+for example, you might want to give it an index so so people can actually address the different elements.
+
+05:33.550 --> 05:42.190
+So coming back to the vector here, what you can do is you can say public see this index and here you
+
+05:42.280 --> 05:46.630
+for the GETER, you say you get the data, add this particular index.
+
+05:46.630 --> 05:52.030
+And for the center, while it's obvious stuff, you say data at index equals value.
+
+05:52.060 --> 05:59.860
+So this is how you set the whole thing up and this would allow you to actually manipulate the different
+
+05:59.860 --> 06:00.310
+components.
+
+06:00.310 --> 06:07.360
+So you can say that the first component of the is equal to zero, or if you want the whole X, Y and
+
+06:07.360 --> 06:12.550
+Z business like like we have in geometry, you can have that as well, except this is where you really
+
+06:12.550 --> 06:16.290
+lose flexibility because we're not doing cogeneration, we're doing generic programming.
+
+06:16.540 --> 06:21.130
+So here, for example, for the vector of what you can do is you can say, well, let's have a public
+
+06:21.130 --> 06:24.280
+problem of type T called X, and that's going to be the first element.
+
+06:24.280 --> 06:32.380
+So for the Geter, we return data apposition zero and for the center we have data position zero equals
+
+06:32.380 --> 06:32.820
+value.
+
+06:32.830 --> 06:40.630
+However, this quickly becomes kind of weird because if you add also the Y and Z, those Y and Z are
+
+06:40.630 --> 06:43.000
+going to be there even if you have a two dimensional vector.
+
+06:43.000 --> 06:48.340
+So you have a Z, but with a two dimensional vector, it doesn't really make any sense and it's actually
+
+06:48.340 --> 06:49.410
+dangerous to use it.
+
+06:49.990 --> 06:55.900
+So as you can see, you're kind of losing some of the functionality here already in terms of, you know,
+
+06:55.900 --> 06:57.280
+losing some of the flexibility.
+
+06:57.280 --> 07:00.100
+But on the other hand, you're gaining quite a lot as well.
+
+07:00.700 --> 07:05.920
+So what you want to do with this kind of construct, well, you might want to, for example, add two
+
+07:05.920 --> 07:06.830
+vectors together.
+
+07:06.860 --> 07:07.990
+Seems like a sensible thing.
+
+07:07.990 --> 07:08.980
+You have one vector.
+
+07:08.980 --> 07:15.930
+You have, let's say another vector factor to Y, which also has a bunch of ideas.
+
+07:15.940 --> 07:20.110
+And by the way, let's suppose you want to construct here once again, if you want to construct, this
+
+07:20.110 --> 07:25.330
+is something that can be set up in the base class so you can have it in the vector, but then you'll
+
+07:25.330 --> 07:27.340
+have to propagate the constructors.
+
+07:27.340 --> 07:29.650
+And let's actually take a look at how this is done.
+
+07:29.650 --> 07:34.880
+So suppose you want to take a bunch of values and you want to initialize the vector out of those values.
+
+07:34.900 --> 07:37.000
+The question is how many arguments should you take?
+
+07:37.000 --> 07:38.170
+Because you cannot, right?
+
+07:39.310 --> 07:39.790
+You cannot.
+
+07:39.790 --> 07:40.180
+Right.
+
+07:40.660 --> 07:49.990
+Some sort of vector where you take T, X, T, Y, Z and so on because you don't know how many arguments
+
+07:49.990 --> 07:50.440
+there are.
+
+07:50.450 --> 07:55.000
+So the only situation, the only construct that solves this problem is parameter.
+
+07:56.890 --> 07:58.820
+Parameter is what solve this problem.
+
+07:58.840 --> 08:04.360
+So here you specify the number of values that you want to assign to a particular vector when you initialize
+
+08:04.360 --> 08:04.540
+it.
+
+08:04.540 --> 08:07.270
+And then, of course, you have to do the actual work.
+
+08:07.270 --> 08:12.670
+You have to figure out that's what data you've got and how to assign it.
+
+08:12.670 --> 08:13.810
+So it looks something like this.
+
+08:13.810 --> 08:15.310
+You can see there's plenty of code here.
+
+08:15.610 --> 08:20.800
+So there is a required size, which is the size of the array you're going to store, obviously relating
+
+08:20.800 --> 08:25.270
+to the dimensions of the data structure, but also the provided size can be different.
+
+08:25.270 --> 08:30.070
+So, for example, you have a three dimensional vector, but you've only provided two elements because
+
+08:30.070 --> 08:33.790
+you find it convenient to just initialize the X and the Y leaving the Z alone.
+
+08:34.000 --> 08:38.320
+So here we take the minimum, we take the minimum of the required size and then provide that size and
+
+08:38.320 --> 08:40.240
+basically assign only those values.
+
+08:40.240 --> 08:44.260
+That makes it kind of the safest approach out there.
+
+08:44.260 --> 08:49.540
+And what you can now do is you can you can sort of add the constructor arguments here, except it's
+
+08:49.540 --> 08:50.790
+not going to work just yet.
+
+08:50.830 --> 08:57.700
+So in order to get this to work, you have to jump into a vector to Y and you have to you have to basically
+
+08:58.060 --> 09:05.230
+create the appropriate constructor is now cogeneration is very easy nowadays using various developer
+
+09:05.230 --> 09:08.210
+tools, but this is one of the two approaches.
+
+09:08.530 --> 09:16.510
+So there is an alternative approach which takes us into the realm of factory methods and recursive generics.
+
+09:16.540 --> 09:20.410
+Now this is a more advanced approach, so it's going to look particularly complicated.
+
+09:20.410 --> 09:22.020
+But I do want to talk about it.
+
+09:22.630 --> 09:26.410
+But before we talk about that, we need to talk about something else, which is also very important,
+
+09:26.410 --> 09:29.650
+and that is how to perform actual operations on these vectors.
+
+09:29.650 --> 09:35.190
+Because what I want to be able to do is I want to be able to say var result equals V plus V V.
+
+09:35.200 --> 09:40.810
+And unfortunately, at the moment this is completely impossible because these things don't have an operator
+
+09:40.810 --> 09:41.230
+plus.
+
+09:41.650 --> 09:47.020
+Furthermore, what you cannot do is you cannot go back into the vector class that we've made here and
+
+09:47.020 --> 09:48.340
+you cannot give it an operator.
+
+09:48.340 --> 09:52.520
+Plus because remember, an operator plus cannot operate on generic types.
+
+09:52.720 --> 09:54.970
+This could be a string or strings.
+
+09:54.970 --> 09:58.570
+Also have operator plus this could be something that doesn't support the operator.
+
+09:58.570 --> 10:00.630
+Plus like I do know a good for example.
+
+10:00.880 --> 10:01.420
+So in this.
+
+10:01.650 --> 10:09.760
+The case, what you have to do is you have to expand the inheritance hierarchy and kind of do what you
+
+10:09.760 --> 10:16.480
+would call partial specialization in C++, you would specialize the vector class to integers and then
+
+10:16.480 --> 10:17.610
+you would inherit from that.
+
+10:17.620 --> 10:18.780
+So let's actually do that.
+
+10:18.820 --> 10:22.030
+Let me just show you how this is done, because it's an interesting study.
+
+10:22.030 --> 10:25.070
+So you'd make an in-between class in this inheritance hierarchy.
+
+10:26.080 --> 10:28.210
+Let's go with vector of int.
+
+10:29.560 --> 10:33.520
+So you take the dimensions, but you don't take the type argument because it's an integer vector.
+
+10:33.910 --> 10:40.090
+So this vector event obviously inherits from vector where you specify and as well as the number of dimensions
+
+10:40.090 --> 10:43.180
+you have to have the same generic constraints as well.
+
+10:43.190 --> 10:47.920
+So you say this has to be an integer and has to have a default constructor.
+
+10:48.190 --> 10:54.610
+And in here you would maybe replicate all of those constructors that we have from the base class because
+
+10:54.610 --> 10:56.940
+you have to propagate them throughout the entire hierarchy.
+
+10:56.950 --> 11:01.110
+So I've generate both the empty constructor as well as a parameter constructor.
+
+11:01.120 --> 11:07.870
+But what we're interested in is getting that operator plus to work because we want to get this expression
+
+11:08.020 --> 11:14.010
+to be legal and we can we can have our cake and eat it too in this particular location.
+
+11:14.020 --> 11:15.730
+So here we want to add the two vectors.
+
+11:16.360 --> 11:22.300
+So public static vector of int with certain dimensions.
+
+11:22.300 --> 11:23.430
+Operator Plus.
+
+11:24.390 --> 11:34.510
+OK, so we take the left hand side and the right hand side, left and side, right hand side and then
+
+11:34.930 --> 11:37.660
+we basically perform the operation.
+
+11:37.670 --> 11:45.260
+So we make the result basically a new vector event D we get the dimensions.
+
+11:45.280 --> 11:48.910
+So once again for equals knew the value.
+
+11:48.940 --> 11:51.670
+That's our generic value adapter work here.
+
+11:51.670 --> 11:54.540
+And then we just make a for loop where we perform the copying.
+
+11:54.880 --> 12:03.610
+So we basically say result at EI equals left hand side at EI plus right hand side at I like so and then
+
+12:04.060 --> 12:09.400
+we can return the result and similarly we could cut and paste this entire method in order to support
+
+12:09.400 --> 12:10.360
+operator times.
+
+12:10.360 --> 12:15.060
+For example, if you wanted to do elementalist multiplication or division or subtraction or whatever,
+
+12:15.250 --> 12:21.190
+but basically what this, this chunk of code, this operator plus implementation now would make this
+
+12:21.190 --> 12:21.760
+thing legal.
+
+12:21.760 --> 12:26.230
+But we have to modify the inheritance hierarchy because remember, vector to Y at the moment is still
+
+12:26.620 --> 12:34.690
+just an ordinary vector of int and dimensions do it now has to be a factor of ins and specifying the
+
+12:34.690 --> 12:35.510
+dimensions like so.
+
+12:35.510 --> 12:36.670
+And now everything is legal.
+
+12:36.910 --> 12:39.940
+All of a sudden the operator plus is a valid operator.
+
+12:39.940 --> 12:43.030
+Everything, everything is working.
+
+12:43.030 --> 12:45.150
+Basically there is absolutely no problem.
+
+12:45.700 --> 12:52.570
+So as you may have noticed, we've had to perform lots of cogeneration for generating the constructors
+
+12:52.570 --> 12:55.030
+because I really like the parameters constructor.
+
+12:55.040 --> 12:58.180
+I really like being able to call the base parameter constructor.
+
+12:58.390 --> 13:04.720
+But you have to kind of jump from here to here and then all the way up to here.
+
+13:04.720 --> 13:11.920
+And it's a lot of work just taking each of these derived classes and just just giving every single one
+
+13:11.920 --> 13:13.360
+of these two constructors.
+
+13:13.360 --> 13:17.950
+Maybe, maybe we can avoid this, because if we didn't have to generate this constructor, then the
+
+13:17.950 --> 13:21.340
+default constructor would be generated automatically, even if you didn't have it.
+
+13:21.370 --> 13:25.600
+So the question is, how can we actually avoid this entire approach now?
+
+13:25.600 --> 13:32.350
+I'll leave the default constructor is here, but let's make another vector public class vector.
+
+13:33.370 --> 13:36.250
+Let's show we have a two dimensional one again.
+
+13:36.260 --> 13:38.430
+Well, let's have a three dimensional vector 3F.
+
+13:38.740 --> 13:43.570
+So vector three is going to be a vector of float.
+
+13:43.930 --> 13:51.190
+So once again, as soon as you introduce a new taib, you have to basically have a new class such as
+
+13:51.220 --> 13:55.510
+like here we have a vector of you would similarly have a vector offloads.
+
+13:55.510 --> 13:59.200
+So without the operator plus it's actually very easy to construct.
+
+13:59.200 --> 14:08.470
+You would just copy it like so you would change of int to of float here and then you would put float
+
+14:08.470 --> 14:08.920
+here.
+
+14:08.920 --> 14:15.160
+And obviously that's well that's pretty much it because you don't have to do anything else.
+
+14:15.160 --> 14:17.980
+So this vector flow just uses floating point numbers.
+
+14:17.980 --> 14:24.040
+You specify the dimensions as three like so and that's pretty much it.
+
+14:24.070 --> 14:31.450
+Now let's suppose that we want to avoid the generation of the constructors and constructor propagation.
+
+14:31.450 --> 14:38.560
+Maybe we want our base class to just provide a factory method because methods can be inherited and vector
+
+14:38.560 --> 14:42.510
+3F would inherit this new factory methods of the base vector class.
+
+14:42.790 --> 14:43.860
+So how can we do this?
+
+14:43.900 --> 14:48.760
+Is it even possible to make a factory method up above here?
+
+14:48.760 --> 14:50.350
+So let's let's try this.
+
+14:50.350 --> 14:51.430
+Let's go into Vector.
+
+14:51.670 --> 14:57.490
+So here we are in Vector and we're going to try to we have a parameter constructor, but we want something
+
+14:57.490 --> 14:57.820
+different.
+
+14:57.820 --> 14:59.920
+We want a parameter factory method.
+
+15:00.930 --> 15:13.440
+So we basically want some sort of public static vector of Tecoma create, which takes programs to values.
+
+15:14.070 --> 15:17.730
+Now you'll see it all go completely wrong in just about a second.
+
+15:18.420 --> 15:21.480
+But then the implementation will be something like the following.
+
+15:21.480 --> 15:26.590
+You basically return new vector of TD where you specify the value.
+
+15:26.610 --> 15:32.550
+So you call the constructor, which is right here, and you return the result of that constructor.
+
+15:32.760 --> 15:36.060
+Now, unfortunately, this approach isn't going to work.
+
+15:36.300 --> 15:37.800
+It simply isn't going to work.
+
+15:37.830 --> 15:39.670
+Let me show you why it's not going to work.
+
+15:39.900 --> 15:42.720
+Let's suppose that we actually decide to use this approach.
+
+15:42.720 --> 15:45.450
+And from the outset, it would look like everything is OK.
+
+15:46.170 --> 15:53.580
+Vahue equals vector three, after all, to create and provide some floating point values, three point
+
+15:53.580 --> 15:55.830
+five to point to have one.
+
+15:56.280 --> 15:57.780
+So this is legal.
+
+15:57.960 --> 16:01.250
+Now, what is the problem if everything works like what is the problem?
+
+16:01.290 --> 16:08.190
+The problem is that as soon as you customize vector 3F in any way, this entire thing just fails.
+
+16:08.310 --> 16:14.310
+Because if you look at this var here and if you actually specify the type explicitly, this is not a
+
+16:14.310 --> 16:18.420
+vector 3f, this is a vector of float and dimensions dot three.
+
+16:18.540 --> 16:19.560
+Now why is this important.
+
+16:19.590 --> 16:26.300
+It's important because let's suppose we decide to go into vector 3F and we decide to override, just
+
+16:26.310 --> 16:28.250
+make a custom to string for example.
+
+16:28.680 --> 16:35.400
+So you make a custom to string where you do something fancy, like you try to, you try to maybe I don't
+
+16:35.400 --> 16:38.810
+know, string join the components using a comma.
+
+16:39.690 --> 16:41.160
+So take the data string.
+
+16:41.520 --> 16:43.170
+So now you customized this type.
+
+16:43.320 --> 16:49.170
+Unfortunately, if you do Udoh to string, you're not going to be calling this method at all, because
+
+16:49.170 --> 16:56.940
+like I said, the result of the variable is a vector of float and dimensions three, whereas this type
+
+16:57.360 --> 17:00.300
+inherits from vector of flow dimensions three.
+
+17:00.300 --> 17:02.180
+So it's not even a vector of float.
+
+17:02.180 --> 17:03.600
+That's just an ordinary factor.
+
+17:04.110 --> 17:08.850
+Another thing, by the way, is that you cannot write something like you plus you.
+
+17:09.750 --> 17:15.870
+It's no longer valid because once again, a vector three Abdul-Karim does not give you a vector of float
+
+17:15.870 --> 17:19.080
+and it's precisely the vector flow that has the operator plus.
+
+17:19.500 --> 17:21.270
+So it looks like a terrible approach.
+
+17:21.300 --> 17:25.920
+It looks like the factory method isn't going to work, but in actual fact, we can make it work.
+
+17:25.920 --> 17:31.830
+And the thing that makes it work is recursive generics, not because of generics are it's a it's a really
+
+17:31.830 --> 17:33.060
+kind of rare approach.
+
+17:33.060 --> 17:38.270
+It's an approach that is used in some of the other design patterns that we discuss here.
+
+17:38.550 --> 17:46.590
+And basically what this means is that when you inherit from vector afloat, which in turn inherits from
+
+17:46.880 --> 17:53.910
+Vector, you have to propagate additional type information up to the base class about the return type
+
+17:54.090 --> 17:55.570
+of your factory.
+
+17:55.830 --> 18:02.100
+So here, instead of returning vector of TD, you have to return some special type, let's call itself.
+
+18:02.550 --> 18:12.810
+So this is the kind of typical approach of factory methods which try to return the type of the derived
+
+18:12.810 --> 18:15.030
+object, the most derived object.
+
+18:15.240 --> 18:17.370
+But of course, this requires quite a bit of work.
+
+18:17.380 --> 18:22.520
+So if we go into the vector class, we now need to add T cells as one of the generic arguments here.
+
+18:22.740 --> 18:25.200
+We also have to have additional constraints.
+
+18:25.470 --> 18:29.790
+So T cells here is going to have the recursive generic constraint.
+
+18:29.800 --> 18:37.290
+So T cell for a member has to inherit from us, it has to inherit from the whole vector to these things.
+
+18:37.290 --> 18:39.360
+So we just cut and paste it here.
+
+18:39.510 --> 18:42.240
+It also has to have a default constructor as well.
+
+18:42.690 --> 18:49.440
+So coming back here now, this entire approach basically changes this and we can no longer do it like
+
+18:49.440 --> 18:51.480
+this because, well, it's not a vector.
+
+18:51.480 --> 18:53.010
+It's easy that we are constructing.
+
+18:53.010 --> 18:59.700
+And it would be better to simply replicate the kind of behavior that we have inside the parameter constructor,
+
+18:59.700 --> 19:02.790
+but in on the temporary variable, essentially.
+
+19:03.060 --> 19:04.300
+So how do we do this?
+
+19:04.320 --> 19:08.550
+Well, we need to return a T cell, so we may as well start by creating it.
+
+19:08.550 --> 19:11.260
+VAR result equals new T cell.
+
+19:12.630 --> 19:13.760
+So far so good.
+
+19:13.770 --> 19:19.920
+And then we can basically perform all of these operations so all of the operations on theorems.
+
+19:20.190 --> 19:27.570
+But when you have data, you just prefix it with the result of data and the same goes for our the data
+
+19:27.570 --> 19:28.950
+here and then you return the result.
+
+19:30.750 --> 19:36.450
+So as you can see, it's kind of difficult to actually reuse that constructor that we have.
+
+19:36.450 --> 19:42.540
+So it's maybe easier to just go with the factory method approach altogether and have everything kind
+
+19:42.540 --> 19:43.310
+of self-contained.
+
+19:43.680 --> 19:46.980
+But the key the key thing here is that we're returning T.
+
+19:47.020 --> 19:49.080
+S returning T cell.
+
+19:49.140 --> 19:52.860
+And because of this, we now have to change the entire hierarchy.
+
+19:52.860 --> 19:54.600
+Like every single time that we have here.
+
+19:54.870 --> 20:00.010
+We have to change every single type to propagate this idea of type information up above.
+
+20:00.030 --> 20:00.780
+So when you.
+
+20:01.010 --> 20:08.420
+For example, vector of float and what you have to do is you also have to modify basically this type
+
+20:08.750 --> 20:13.470
+to also have additional type information.
+
+20:13.490 --> 20:15.830
+Now, different ways of doing it.
+
+20:16.110 --> 20:21.080
+Maybe you want to sort of specify it here, or maybe you want to specify it at this particular point.
+
+20:21.090 --> 20:25.850
+So here you could say a vector of float, the being, the underlying type.
+
+20:25.860 --> 20:30.500
+So if somebody calls it on vector float, then you get to vector offload.
+
+20:30.530 --> 20:36.650
+But, you know, the point is that you inherit further from this and the same will go for vector event,
+
+20:37.580 --> 20:39.230
+same recursive generic approach.
+
+20:39.230 --> 20:40.400
+So you will specify it here.
+
+20:40.400 --> 20:43.010
+But really you have to go down, then you have to specify it.
+
+20:43.020 --> 20:50.330
+And in these types you have to have this vector to Y and so on and all the rest of it.
+
+20:50.330 --> 20:53.180
+You have to have basically all of this stuff working.
+
+20:53.390 --> 21:01.670
+So remember, we wanted to avoid it in Vector 3F, so that's perhaps where we would specify both that
+
+21:01.670 --> 21:03.430
+and the propagator type as well.
+
+21:03.680 --> 21:10.550
+So the modification will go something like this, you would go back to a vector float and you would
+
+21:10.550 --> 21:12.980
+modify this to also have a T.
+
+21:12.980 --> 21:13.360
+S.
+
+21:15.890 --> 21:22.370
+So that's particularly unpleasant because now you basically have to kind of propagate yourself across
+
+21:22.370 --> 21:23.800
+the entire thing, so to speak.
+
+21:23.810 --> 21:24.000
+So.
+
+21:24.050 --> 21:32.150
+So you take a vector of itself and then actually this has to be this entire thing passed in here.
+
+21:32.270 --> 21:34.690
+So you can see it's kind of getting really complicated.
+
+21:34.700 --> 21:36.410
+It's getting really convoluted.
+
+21:36.410 --> 21:41.270
+I mean, I can sort of see what's going on here, but it's getting less and less readable.
+
+21:41.270 --> 21:44.780
+But we are going to get some benefits from it.
+
+21:44.780 --> 21:47.090
+Of course, now this part is invalid.
+
+21:47.710 --> 21:53.720
+Now, this part has to also be modified because you basically have to propagate vector 3F here as well
+
+21:53.720 --> 21:55.700
+before you propagate the dimensions.
+
+21:55.970 --> 22:01.460
+But now what we have is we have this wonderful situation where if I take this VAR and I specify the
+
+22:01.460 --> 22:07.330
+type explicitly, you'll see that we are still getting vector offloads stuff.
+
+22:07.400 --> 22:15.140
+And that's just not particularly good, is it, because we want to create invocation to actually give
+
+22:15.140 --> 22:21.230
+us a vector 3F And at the moment we're, we're almost there, we're almost there but we're not quite
+
+22:21.230 --> 22:21.530
+there.
+
+22:22.460 --> 22:24.640
+So let's try tracing through the time.
+
+22:24.660 --> 22:33.620
+So we have a vector 3F, a vector 3F is it inherits from a vector offload and it specifies vector 3F
+
+22:33.620 --> 22:33.920
+in here.
+
+22:33.920 --> 22:45.080
+So Vector 3F is the T self that is specified here and then the vector here is a vector of float TSF.
+
+22:45.080 --> 22:53.630
+But in reality what happens is you have to specify I think t self here, you have to specify to yourself
+
+22:53.630 --> 23:00.720
+here and then you get additional constraints on top of that because we don't know if that t self is
+
+23:01.160 --> 23:01.810
+actually valid.
+
+23:01.820 --> 23:10.170
+So we add an additional constraint that yourself is new, but even that is not enough because T.
+
+23:10.220 --> 23:16.880
+S must also be convertible to a vector of the use of a float of D which.
+
+23:18.050 --> 23:20.720
+As it stands, it is, in fact, convertible.
+
+23:20.750 --> 23:25.860
+Everything is valid, but you can sort of see the complexity rise as we do this.
+
+23:26.240 --> 23:31.580
+So with all of these modifications, let's go back into our declaration of Vector 3F and take a look
+
+23:31.580 --> 23:32.610
+at what the type is.
+
+23:32.630 --> 23:35.290
+And finally, we have our final result.
+
+23:35.600 --> 23:37.300
+So this is what we wanted in the first place.
+
+23:37.310 --> 23:40.860
+We wanted the factory method to return the actual types of it.
+
+23:40.970 --> 23:46.760
+Vector three, if I get a vector 3F, if I call this on something else and we have added support for
+
+23:46.760 --> 23:50.750
+this yet, but if I call it on something else, then I get that something else has a result.
+
+23:50.760 --> 23:55.460
+So recursive generics are particularly helpful in here, but they do introduce quite a bit of complexity
+
+23:55.670 --> 24:00.830
+because now every single declaration like a Vector three declaration just becomes this really messy
+
+24:00.830 --> 24:01.600
+inheritance thing.
+
+24:01.610 --> 24:06.730
+I mean, this is quite hard to understand for somebody who just wants to expand this hagy like adding
+
+24:06.730 --> 24:07.280
+new type.
+
+24:07.280 --> 24:09.170
+It now becomes fairly complicated.
+
+24:09.170 --> 24:11.270
+But this is a legitimate approach.
+
+24:11.280 --> 24:17.030
+This is something that does work and doesn't allow you to have this this nice little setup.
+
+24:17.250 --> 24:22.280
+So the purpose of this entire lecture was to, first of all, talk about the generic value of data,
+
+24:22.280 --> 24:27.050
+which is a rather silly thing that we have to do in C Sharp in order to propagate integer values or,
+
+24:27.350 --> 24:31.890
+you know, any kind of literal values as arguments of a generic type.
+
+24:31.910 --> 24:32.930
+So that is one thing.
+
+24:33.110 --> 24:37.190
+But then we also discussed a couple of other things, like how to expand the hierarchy so that you get
+
+24:37.370 --> 24:41.810
+operations on numeric types, in which case you basically have partial specialization.
+
+24:41.810 --> 24:46.250
+You have like if you want operator plus, for example, you have to partially specialize.
+
+24:46.250 --> 24:52.340
+The thing you have to say that here will specify explicitly that this is an in thing and this loses
+
+24:52.340 --> 24:57.470
+some of the generality, because now if you want a vector of float, you have to have the vector flow
+
+24:57.470 --> 24:59.450
+class effect of double class, blah, blah, blah.
+
+24:59.460 --> 25:02.090
+So you're not as generic as you want it to be.
+
+25:02.360 --> 25:06.410
+And then, of course, the icing on the cake here is to take a look at how to make a factory method,
+
+25:07.580 --> 25:11.660
+which uses recursive generics to propagate type information across the inheritance.
+
+25:12.620 --> 25:15.320
+So that's my example of the generic value adapter.

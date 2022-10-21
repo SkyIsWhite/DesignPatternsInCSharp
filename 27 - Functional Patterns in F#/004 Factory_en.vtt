@@ -1,0 +1,346 @@
+WEBVTT
+
+00:02.540 --> 00:08.270
+All right, now let's talk about factories, so a factory is well, it can be a class or it can be a
+
+00:08.270 --> 00:10.040
+method which produces something.
+
+00:10.280 --> 00:15.530
+And we're going to take a look at a rather unusual approach that the official language allows you to
+
+00:15.530 --> 00:15.810
+have.
+
+00:16.280 --> 00:21.260
+So let's suppose that what we're going to produce is a country.
+
+00:21.260 --> 00:30.830
+So we're going to have a type country and we're going to be making either the US of a workplace or the
+
+00:30.830 --> 00:31.680
+United Kingdom.
+
+00:31.880 --> 00:32.510
+There we go.
+
+00:32.900 --> 00:36.350
+So what we can do and this is a discriminating union, by the way.
+
+00:36.350 --> 00:41.870
+So essentially behind the scenes, of course, you have a class called country and then you have classes,
+
+00:41.870 --> 00:42.920
+USA and UK.
+
+00:42.920 --> 00:49.610
+But of course, F Sharp makes it so that these things are they appear to you as if they were either
+
+00:49.610 --> 00:51.070
+members or something to that effect.
+
+00:51.080 --> 00:51.990
+So somewhat different.
+
+00:52.250 --> 00:57.460
+Now what you can do with a discriminated union is you can give it a member.
+
+00:57.740 --> 01:03.770
+So just like giving an enum an extension method, for example, here what you can do is you can give
+
+01:03.770 --> 01:12.470
+it a member so you can say type country with and you can have a static member called create, for example.
+
+01:12.480 --> 01:17.990
+So that's going to be a function which is going to take a string and is going to use that string to
+
+01:17.990 --> 01:19.490
+create one of those two countries.
+
+01:19.520 --> 01:26.120
+So if somebody says USA or if somebody says America and I know it's not fair to equate American USA,
+
+01:26.120 --> 01:28.160
+then we're going to return the USA.
+
+01:29.240 --> 01:36.800
+Otherwise, if somebody says UK or if somebody says England, and once again, I know that England isn't
+
+01:36.800 --> 01:39.830
+the only part of the UK, then we're going to return the UK.
+
+01:39.830 --> 01:47.930
+And if somebody asks for something else, then we're just going to crash fair with no such country because
+
+01:47.930 --> 01:50.260
+apparently only two countries exist on this planet.
+
+01:50.630 --> 01:55.010
+So this is how you would define what is effectively a factory method.
+
+01:55.010 --> 02:01.280
+But it's a factory method which is defined on not a single class, but behind the scenes it's defined
+
+02:01.280 --> 02:02.440
+on the hierarchy of classes.
+
+02:02.450 --> 02:06.140
+So you have a country and then you have different types of country.
+
+02:06.140 --> 02:07.590
+You have USA and UK.
+
+02:07.790 --> 02:15.740
+So of course, you have to be aware of how this functions in F Sharp, as well as how this Kompas into
+
+02:15.740 --> 02:21.890
+Ehle, because of course, inside the intermediate language, there is no explicit support for discriminating
+
+02:21.900 --> 02:22.390
+unions.
+
+02:22.400 --> 02:24.500
+It's all implemented with classes anyway.
+
+02:24.500 --> 02:30.690
+So these effectively become a base class and a bunch of inherited classes like so.
+
+02:31.190 --> 02:36.520
+So this is one of the ways in which you can actually construct a country.
+
+02:36.530 --> 02:41.330
+So in this case, let me actually show you how this would work and let's try to be careful to have all
+
+02:41.330 --> 02:45.860
+the entry point and all the specified correctly, because otherwise nothing will work.
+
+02:45.890 --> 02:48.610
+So let me rgv equals.
+
+02:48.860 --> 02:56.420
+So what you can do here is you can, for example, make the UK so that UK equals well you can do country
+
+02:56.420 --> 02:56.960
+in the create.
+
+02:56.960 --> 02:59.000
+Of course that's that's one possibility.
+
+02:59.000 --> 03:07.190
+So you can say country don't create and then you can say UK and then this way you will actually create
+
+03:07.190 --> 03:10.970
+the United Kingdom and then you can bet you can, for example, print its capital.
+
+03:10.970 --> 03:14.240
+Of course we don't have any support for capital yet.
+
+03:14.240 --> 03:18.860
+So let's suppose you want to have support for capitals.
+
+03:18.860 --> 03:24.020
+You want the support, you want to provide information about the capital of each country.
+
+03:24.320 --> 03:30.830
+Now, one way you can do this is you can start, you know, expanding the Inam cases or the discriminated
+
+03:30.830 --> 03:31.730
+union cases.
+
+03:33.200 --> 03:35.450
+But there is a completely different way.
+
+03:35.450 --> 03:43.610
+And that way is to simply augment, to sort of provide effectively another factory, which will give
+
+03:43.610 --> 03:44.520
+you this information.
+
+03:44.540 --> 03:51.290
+So what we can do and this is going to be a bit crazy, but we're going to define a type called let's
+
+03:51.290 --> 03:58.190
+say I Country Info, I country info, which is going to have an abstract member called Capital, which
+
+03:58.190 --> 03:59.130
+is going to be a screen.
+
+03:59.600 --> 04:05.540
+So what we're saying is that everyone that implements I country info has to provide a capital of some
+
+04:05.540 --> 04:05.900
+kind.
+
+04:06.140 --> 04:11.390
+Now typically in the CCAR paradigm, what you would expect is you would expect classes which implement
+
+04:11.390 --> 04:11.690
+this.
+
+04:12.230 --> 04:16.720
+But in the FSA paradigm, you don't really have to you don't have to do it.
+
+04:17.030 --> 04:19.580
+So what you can do instead is you can have something like the following.
+
+04:19.610 --> 04:23.830
+So now we're going to have a factory or factory method or factory function.
+
+04:23.840 --> 04:24.650
+How are you on the call?
+
+04:24.650 --> 04:25.750
+It called make.
+
+04:25.760 --> 04:30.500
+So we have let make country equals.
+
+04:30.740 --> 04:37.910
+So here once again, the idea is that somebody is providing a country like USA or UK, for example,
+
+04:38.090 --> 04:41.970
+and they're getting an eye country info with a capital.
+
+04:42.620 --> 04:49.300
+So here I can match country with and now we can match against the different discriminating union cases.
+
+04:49.310 --> 04:50.810
+So something gives us USA.
+
+04:51.830 --> 04:53.970
+Then here we can do something very interesting.
+
+04:53.990 --> 04:58.930
+So remember I said that in the c sharp language you would typically inherit from a country info?
+
+04:59.240 --> 05:01.670
+Well, in the F sharp language you don't have to what you can.
+
+05:01.700 --> 05:08.120
+Do is you can just do a bunch of curly braces and here you can say new high country info and then you
+
+05:08.120 --> 05:09.920
+can specify all those missing members.
+
+05:09.920 --> 05:12.890
+So all those abstract members can be implemented right here.
+
+05:12.890 --> 05:17.870
+So I can say new eye contact info with and here I can say no.
+
+05:17.900 --> 05:21.680
+Eckstut capital equals Washington.
+
+05:23.220 --> 05:28.920
+Washington like so and similarly for the U.K., for example, I can do the same thing, so here I can
+
+05:28.920 --> 05:37.680
+say New I country info with no X capital equals London like so.
+
+05:37.680 --> 05:40.230
+And this would allow me to effectively do the following.
+
+05:40.230 --> 05:50.470
+So I can say, for example, that USA equals Make Country USA and this would give me an I member in
+
+05:50.470 --> 05:56.490
+my country infrastructure, which would have Washington as the capital so I can print it so I can actually
+
+05:56.490 --> 06:04.280
+go ahead and print Štefan USA dot capital, the capital of the United States.
+
+06:04.560 --> 06:10.440
+So that's actually run this just to see that it does in fact function, which hopefully runs this time.
+
+06:10.440 --> 06:12.770
+My previous few demos have been a bit scratchy.
+
+06:12.780 --> 06:16.070
+So here where you can see that the capital is in fact Washington.
+
+06:16.740 --> 06:19.340
+So what is the take away from this demo?
+
+06:19.620 --> 06:21.170
+There's nothing particularly magical here.
+
+06:21.180 --> 06:26.130
+So the first thing is to realize that when you have a discriminated union, you can also give it members
+
+06:26.520 --> 06:32.670
+and you can give it a member like create, which basically makes it a factory method or factory function
+
+06:32.670 --> 06:34.280
+for that discriminated union.
+
+06:34.650 --> 06:40.200
+So here in my case, but in particular in this case, what I'm doing is I'm expecting a string.
+
+06:40.950 --> 06:45.960
+And one annoying thing that you'll find, and this is really annoying, especially coming from the Sea
+
+06:46.590 --> 06:53.600
+World, is that there is no sort of name argument here.
+
+06:53.610 --> 06:57.500
+There is no sort of switch name here and nothing like that.
+
+06:57.540 --> 06:59.520
+So there is no match name instead.
+
+06:59.700 --> 07:00.640
+It's kind of implicit.
+
+07:00.930 --> 07:05.910
+So the first argument is implicit and that is the argument that gets checked against the different cases.
+
+07:05.910 --> 07:10.740
+And then we return the case from the discriminated union.
+
+07:11.100 --> 07:14.550
+So that is somewhat unpleasant, but I'm sure you can live with it.
+
+07:14.550 --> 07:16.530
+And it's it's somewhat readable.
+
+07:16.530 --> 07:21.690
+I would say there is some loss of information here because obviously you would expect an argument because
+
+07:21.690 --> 07:24.840
+that argument is being checked here and here, respectively.
+
+07:24.840 --> 07:26.390
+But, yeah, we've lost that.
+
+07:26.640 --> 07:31.560
+So the second thing that I wanted to demonstrate is this idea that you could have a type which has an
+
+07:31.560 --> 07:32.400
+abstract member.
+
+07:32.410 --> 07:39.270
+So think of it like an abstract class or an interface, and you end up being able to create a new kind
+
+07:39.270 --> 07:40.680
+of anonymous instances of it.
+
+07:40.680 --> 07:45.360
+So effectively here you create an anonymous instance which implements all the missing pieces.
+
+07:45.370 --> 07:49.600
+So the idea is so long as you implement the missing pieces, you can actually return this thing.
+
+07:49.980 --> 07:56.750
+So here we basically return effectively a new type where the member is satisfied by this expression.
+
+07:56.760 --> 08:00.180
+So in this case, we return Washington, in this case, we return London.
+
+08:00.180 --> 08:04.290
+So once again, this is an approach which is fundamentally different to what SEECP does.
+
+08:04.620 --> 08:11.760
+And hopefully it highlights the idea that it is possible to create functions in a slightly different
+
+08:11.760 --> 08:12.150
+way.

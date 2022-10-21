@@ -1,0 +1,397 @@
+WEBVTT
+
+00:01.980 --> 00:07.320
+We're not going to take a look at how autophagy helps you build adapters and not just build them, but
+
+00:07.320 --> 00:08.530
+actually inject them correctly.
+
+00:08.550 --> 00:12.990
+So let me give you an example where let's suppose we're building some sort of good application and that
+
+00:12.990 --> 00:18.650
+good application has a toolbar with a bunch of buttons on it and pressing a button executes a command.
+
+00:18.930 --> 00:25.380
+So we implement this interface called I Command, which is just going to have a single method called
+
+00:25.380 --> 00:25.880
+execute.
+
+00:25.890 --> 00:30.150
+And this is what's going to be implemented in two commands that we're going to make.
+
+00:30.510 --> 00:33.180
+So I'm going to make a couple of the right types.
+
+00:33.180 --> 00:36.900
+I'll make a save command, which will simulate saving a file.
+
+00:37.200 --> 00:44.130
+So in this case, I'll just simulated by using console the right line, saw the right line, saving
+
+00:44.130 --> 00:48.750
+a file and then duplicate this and I'll make open command.
+
+00:49.350 --> 00:55.110
+So in this case, I will have an open command like so.
+
+00:55.110 --> 00:57.690
+And here I will be opening a file.
+
+00:59.680 --> 01:02.500
+OK, so we have two commands implementing this interface.
+
+01:02.520 --> 01:05.970
+Now let's suppose that these commands are invoked by pressing buttons.
+
+01:06.330 --> 01:11.660
+So we have this idea of a button and the button is related to the command that it invokes.
+
+01:11.670 --> 01:18.450
+So each button has an I command called command and will make a constructor which initializes the commands
+
+01:18.450 --> 01:19.770
+so that we can inject it.
+
+01:20.190 --> 01:20.610
+OK.
+
+01:20.640 --> 01:25.320
+In addition, we'll have some sort of method called click, and that's when you click the button, you
+
+01:25.320 --> 01:26.250
+execute the commands.
+
+01:26.250 --> 01:28.290
+So you simply say command and execute.
+
+01:28.770 --> 01:29.400
+There we go.
+
+01:29.550 --> 01:35.190
+OK, so having implemented this, we might try to, you know, start using this right in our container
+
+01:35.190 --> 01:35.540
+builder.
+
+01:35.790 --> 01:39.230
+So in the container builder, we might start by registering the commands.
+
+01:39.230 --> 01:43.740
+So I would say register type save command.
+
+01:45.430 --> 01:55.240
+And I would try to register it as I command like so high command, I would go and I would just duplicate
+
+01:55.240 --> 01:57.370
+this and do this for the open command.
+
+01:59.080 --> 02:02.620
+And then, of course, what I want to do is I want to build the actual editor.
+
+02:02.620 --> 02:07.900
+I want to build like a GUI editor, which actually gets a roll of buttons to display.
+
+02:07.900 --> 02:11.170
+So I might go ahead and make a class called editor.
+
+02:11.740 --> 02:19.810
+And in here I would make a field which is on innumerable of the button, a bunch of buttons that we're
+
+02:19.810 --> 02:23.020
+accepting and once again initialize it in the constructor.
+
+02:23.200 --> 02:27.940
+Indian edition will make a diagnostic method for clicking all the buttons.
+
+02:28.300 --> 02:36.470
+So we say for each FA BTN in buttons and we simply click each of the buttons like so.
+
+02:37.090 --> 02:41.650
+OK, so I want to make this editor and I've already registered the commands.
+
+02:41.950 --> 02:45.210
+So all I have to do now is of course register the button.
+
+02:45.220 --> 02:53.440
+So register type button and register the editor itself, be the register type editor like so.
+
+02:53.440 --> 03:01.360
+And then supposedly what I can do is I can say var editor equals see resolve resolve the editor and
+
+03:01.360 --> 03:03.530
+then editor dot click all.
+
+03:04.210 --> 03:10.210
+So I'm thinking that I got two buttons here because look I have this injected innumerable off button
+
+03:10.210 --> 03:11.830
+so I'm expecting two buttons.
+
+03:11.840 --> 03:13.390
+Right, well wrong.
+
+03:13.810 --> 03:15.160
+We're not getting two buttons.
+
+03:15.160 --> 03:15.940
+Nowhere near.
+
+03:16.300 --> 03:19.110
+We get just a single button which does opening a file.
+
+03:19.330 --> 03:21.340
+So let me explain to you what's going on here.
+
+03:21.760 --> 03:25.800
+We're only having a single button registration way.
+
+03:25.810 --> 03:31.540
+If we had some I button interface and we had button and big button and those were buttons, then we
+
+03:31.540 --> 03:32.740
+would have two registrations.
+
+03:32.740 --> 03:39.610
+At the moment we just have one button and that button refers to an AI command, which by default becomes
+
+03:39.610 --> 03:40.480
+an open command.
+
+03:40.480 --> 03:42.160
+And that's exactly what we get on the screen.
+
+03:42.490 --> 03:49.060
+Now, what we want is we want the button to act as an adapter for an AI command to kind of invoke the
+
+03:49.060 --> 03:49.930
+appropriate I command.
+
+03:49.930 --> 03:53.650
+So the number of buttons that we want in here is two, not one.
+
+03:54.160 --> 03:55.210
+So how do we do this?
+
+03:55.210 --> 03:58.900
+How do we set up this connection between the button and the Eichman?
+
+03:58.900 --> 04:05.170
+How do we tell the fact that it's an adapter, what we can do it and this is done by calling B don't
+
+04:05.170 --> 04:08.320
+register register adapter.
+
+04:08.680 --> 04:16.870
+So what's happening here is you have to specify the adapted item, which is I command and who is doing
+
+04:16.870 --> 04:18.400
+the adapting, which is button.
+
+04:18.850 --> 04:22.840
+And then of course we can provide the lambda which actually initializes the button.
+
+04:22.990 --> 04:29.350
+So given and I command, which I'll call ACMD, what we need to do is we need to return a new button
+
+04:29.950 --> 04:32.950
+which simply initializes that command.
+
+04:33.280 --> 04:35.350
+That's really all there is to it.
+
+04:35.350 --> 04:39.040
+And if we execute this now, we'll get completely different results.
+
+04:39.340 --> 04:41.860
+We get both of these outputs.
+
+04:42.100 --> 04:43.110
+So what's happening here?
+
+04:43.120 --> 04:47.920
+Well, in actual fact, what's happening is you're getting two buttons, you're getting one button for
+
+04:47.920 --> 04:48.820
+each command.
+
+04:48.970 --> 04:54.010
+So what happens is you resolve an I command look at all the results and for each result, make a button
+
+04:54.010 --> 04:55.150
+and then check that button.
+
+04:55.160 --> 05:02.170
+So in the eye numerable here, we just get two elements instead of one, because they have been explicitly
+
+05:02.170 --> 05:05.770
+associated using this register adapter in location.
+
+05:06.520 --> 05:11.980
+Now, it's also possible to merge this approach with the approach of providing meta information.
+
+05:12.370 --> 05:18.250
+So if you want some metadata provided, then you can do this using this mechanism of adapters as well.
+
+05:18.250 --> 05:20.140
+And let me show you how this is done.
+
+05:20.140 --> 05:25.750
+So let us suppose that we go up into the button and we have some metadata here, which is passed.
+
+05:25.750 --> 05:30.130
+So we'll have private string name and I'll initialize it in the constructor as well.
+
+05:30.160 --> 05:35.650
+So I'll just initialize this field in the constructor and then we'll have some sort of method called
+
+05:35.650 --> 05:45.100
+Print Me Like So and we'll consolidate line and we'll say I am a button.
+
+05:46.940 --> 05:50.150
+So I'll say like this, I am.
+
+05:51.690 --> 05:52.770
+A button.
+
+05:54.670 --> 05:57.770
+A button called and then the name.
+
+05:58.110 --> 06:03.850
+OK, so we want to specify this name from the configuration, that's all that we want to do and it is
+
+06:03.850 --> 06:04.690
+in fact possible.
+
+06:04.690 --> 06:10.690
+So it will be a similar register adapter call in here, except not quite like this.
+
+06:10.870 --> 06:14.710
+Instead, what we'll say is we'll say be the register adapter.
+
+06:14.710 --> 06:20.020
+And here, instead of specifying I command will specify šemeta I command.
+
+06:21.040 --> 06:28.270
+So Medda I command allows you to provide additional information and in addition will have the button
+
+06:28.300 --> 06:29.140
+as before.
+
+06:29.500 --> 06:33.460
+I need to have a using statement which for some reason I'm not getting automatically.
+
+06:33.730 --> 06:38.830
+So just write it down using artifact features, dot metadata.
+
+06:39.430 --> 06:39.850
+All right.
+
+06:40.030 --> 06:45.480
+So we're done with the meta, almost done because we still have to finish off this invocation.
+
+06:45.490 --> 06:47.850
+So here we take a lambda as always.
+
+06:48.190 --> 06:52.170
+So the lambda that we're getting is slightly different.
+
+06:52.180 --> 06:53.440
+So we take the command.
+
+06:53.440 --> 06:56.410
+But remember, command is an Medda object now.
+
+06:56.830 --> 06:59.830
+So in order to get something from you have to use Dopp value.
+
+07:00.040 --> 07:03.100
+And in order to get the metadata, will you use the metadata?
+
+07:03.100 --> 07:05.830
+So we make a new button just as before.
+
+07:06.160 --> 07:11.950
+And we say that while here is the button, it's initialized with CMD value that refers to the actual
+
+07:11.950 --> 07:12.460
+command.
+
+07:12.670 --> 07:20.320
+And if you want metadata, we say CMT metadata and specify some metadata like name, for example, and
+
+07:20.320 --> 07:23.170
+we can cast that to a string like so.
+
+07:23.500 --> 07:30.850
+OK, so this is the invocation for registering the I command being decorated by a button with metadata
+
+07:30.850 --> 07:31.510
+included.
+
+07:31.840 --> 07:38.500
+And then of course, all we have to do is we have to actually supply the metadata somewhere and then
+
+07:38.620 --> 07:40.120
+actually invoke the whole thing.
+
+07:40.120 --> 07:43.740
+So to supply the metadata, what I can do is I can specify it here.
+
+07:43.750 --> 07:53.200
+So for example, here I can specify that the name here for this command will be safe and that the metadata
+
+07:53.200 --> 07:57.580
+here with metadata, the name is going to be open.
+
+07:58.330 --> 07:59.620
+So that's the metadata.
+
+07:59.620 --> 08:01.660
+We specify the actual metadata here.
+
+08:01.660 --> 08:06.760
+We specify the handling of the metadata in the register in that period location.
+
+08:06.940 --> 08:10.230
+And then, of course, we have to actually make use of all of this.
+
+08:10.540 --> 08:13.000
+So let's see how we can get that done.
+
+08:13.010 --> 08:18.880
+So instead of clicking all the elements, what I'm going to do is I'm going to say for each part BTN
+
+08:19.060 --> 08:24.420
+in Ed the buttons and remember, buttons and some is not available yet.
+
+08:24.430 --> 08:26.380
+So let's jump into the edit.
+
+08:26.520 --> 08:28.090
+Let's actually expose the buttons.
+
+08:28.390 --> 08:34.450
+So let's see if we can do it the smart money by generating a properly of some kind on this and it's
+
+08:34.450 --> 08:37.030
+going to be read-only, let's just do it like this.
+
+08:37.030 --> 08:41.050
+And of course the modern sysop syntax will be even nicer.
+
+08:41.060 --> 08:45.460
+So let's make an expression body and then for each of the buttons, what I'm going to do is I'm going
+
+08:45.460 --> 08:52.480
+to say be the end or print me, print me like so and let's see what this actually comes up with.
+
+08:54.240 --> 08:54.540
+Hurray!
+
+08:54.630 --> 09:00.360
+So as you can see, we're passing the metadata and we have I am a button called Save and I am a button
+
+09:00.360 --> 09:05.340
+called Open, we're saving open are the names which were being passed in from the outside.
